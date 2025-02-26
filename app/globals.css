@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Custom Scrollbar Styles */
+.navbar::-webkit-scrollbar {
+    width: 8px; /* Adjust the width of the scrollbar */
+  }
+  
+  .navbar::-webkit-scrollbar-thumb {
+    background-color: #cf75cf; /* Purple color for the thumb */
+    border-radius: 1px; /* Optional: rounds the corners of the scrollbar thumb */
+  }
+  
+  .navbar::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Optional: sets the track color */
+    border-radius: 10px;
+  }
+  
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  
+  .animate-scroll {
+    animation: scroll 50s linear infinite;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3); /* Black with 50% opacity */
+    /* backdrop-filter: blur(1px); Blur effect */
+    z-index: 30; /* Ensure it's above most elements but below the sidebar */
+    display: none; /* Hidden by default */
+    pointer-events: none; /* So it doesn't block interactions */
+  }
+  
+  .overlay.active {
+    display: block; /* Show overlay when active */
+    pointer-events: auto;
+  }
+  
+
+
+
+/* below css is for hide the scroll bar on small devcies  */
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in WebKit browsers */
+}
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Hides scrollbar in IE and Edge */
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
+  
+
+
+
+/* styles/globals.css */
+
+/* Global scrollbar styles */
+::-webkit-scrollbar {
+  width: 12px;  /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3490dc;  /* Blue color */
+  border-radius: 30px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0;  /* Light gray background for the track */
+}
+
+/* For Firefox */
+html {
+  scrollbar-color: #3490dc #f0f0f0;  /* Thumb color and track color */
+  scrollbar-width: thin;  /* Thin scrollbar */
+}
