@@ -87,10 +87,7 @@ const AdsPage = () => {
   ]);
 
   useEffect(() => {
-    console.log("Selected Location:", selectedLocation); // Debugging
-    console.log("Selected Brands:", selectedBrands); // Debugging
-    console.log("Selected Conditions:", selectedConditions); // Debugging
-    console.log("Price Range:", priceRange); // Debugging
+
   }, [selectedLocation, selectedBrands, selectedConditions, priceRange]);
 
   // Filter Ads Function
@@ -137,7 +134,7 @@ const AdsPage = () => {
   // Update Visible Ads
   useEffect(() => {
     const filteredAds = filterAds(ads);
-    console.log("Visible Ads:", filteredAds.slice(0, currentPage * 12)); // Debugging
+    // console.log("Visible Ads:", filteredAds.slice(0, currentPage * 12)); // Debugging
     const startIndex = 0;
     const endIndex = currentPage * 12;
     setVisibleAds(filteredAds.slice(startIndex, endIndex));
@@ -628,3 +625,5 @@ export default function AdsPageWrapper() {
     </Suspense>
   );
 }
+
+//End
