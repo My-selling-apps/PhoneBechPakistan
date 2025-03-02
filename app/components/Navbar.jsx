@@ -110,7 +110,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-center justify-between px-1 py-4 bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white fixed top-0 w-full z-50">
+    <nav className="flex items-center justify-between px-1 md:px-8 py-4 bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white fixed top-0 w-full z-50">
       {/* Left: Brand Name */}
       <div className="flex-shrink-0">
         <h1 className="text-xl font-bold ">
