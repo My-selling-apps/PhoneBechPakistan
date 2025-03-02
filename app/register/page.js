@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { supabase } from "../supabase"; // Import Supabase client
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -14,7 +15,6 @@ const page = () => {
   });
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState({ open: false, message: "" }); // Modal state
-
   const [otp, setOtp] = useState(""); // To store the OTP entered by the user
   const [showOtpField, setShowOtpField] = useState(false); // To toggle between form and OTP field
 
@@ -25,133 +25,117 @@ const page = () => {
     });
   };
 
-// First update handleSignUp to clear any existing temp data for the email
-const handleSignUp = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  const { email, password, confirmPassword, phoneNumber } = formData;
+    const { email, password, confirmPassword, phoneNumber } = formData;
 
-  if (!email || !password || !confirmPassword || !phoneNumber) {
-    showModal("Please fill in all fields.");
-    setLoading(false);
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    showModal("Passwords do not match.");
-    setLoading(false);
-    return;
-  }
-
-  try {
-    // First, clean up any existing data for this email
-    await supabase
-      .from("temp_users")
-      .delete()
-      .eq("email", email);
-    
-    await supabase
-      .from("otp_table")
-      .delete()
-      .eq("email", email);
-
-    // Then proceed with new registration
-    const response = await fetch("/api/mail", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        userFirstname: email,
-        password,
-        phoneNumber,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      setShowOtpField(true);
-      showModal("OTP sent to your email. Please check your inbox.");
-    } else {
-      showModal(result.error || "Failed to send OTP. Please try again.");
-    }
-  } catch (error) {
-    showModal("An error occurred. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-// Then update handleOtpVerification
-const handleOtpVerification = async () => {
-  try {
-    // Step 1: Get temp user data first
-    const { data: tempUserData, error: tempUserError } = await supabase
-      .from("temp_users")
-      .select("*")
-      .eq("email", formData.email)
-      .single();
-
-    if (tempUserError || !tempUserData) {
-      showModal("Registration session expired. Please register again.");
-      setShowOtpField(false); // Go back to registration form
+    if (!email || !password || !confirmPassword || !phoneNumber) {
+      showModal("Please fill in all fields.");
+      setLoading(false);
       return;
     }
 
-    // Step 2: Verify OTP
-    const { data: otpData, error: otpError } = await supabase
-      .from("otp_table")
-      .select("otp")
-      .eq("email", formData.email)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
-
-    if (otpError || !otpData) {
-      showModal("OTP verification failed. Please try again.");
+    if (password !== confirmPassword) {
+      showModal("Passwords do not match.");
+      setLoading(false);
       return;
     }
 
-    if (otpData.otp !== otp) {
-      showModal("Incorrect OTP. Please try again.");
-      return;
+    try {
+      // First, clean up any existing data for this email
+      await supabase.from("temp_users").delete().eq("email", email);
+      await supabase.from("otp_table").delete().eq("email", email);
+
+      // Then proceed with new registration
+      const response = await fetch("/api/mail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          userFirstname: email,
+          password,
+          phoneNumber,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setShowOtpField(true);
+        showModal("OTP sent to your email. Please check your inbox.");
+      } else {
+        showModal(result.error || "Failed to send OTP. Please try again.");
+      }
+    } catch (error) {
+      showModal("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    // Step 3: Create new user in authentication
-    const { error: signUpError } = await supabase.auth.signUp({
-      email: tempUserData.email,
-      password: tempUserData.password,
-    });
-
-    if (signUpError) {
-      showModal("Failed to register user. Please try again.");
-      return;
-    }
-
-    // Step 4: Clean up temp data
-    await Promise.all([
-      supabase
-        .from("otp_table")
-        .delete()
-        .eq("email", formData.email),
-      supabase
+  const handleOtpVerification = async () => {
+    try {
+      // Step 1: Get temp user data first
+      const { data: tempUserData, error: tempUserError } = await supabase
         .from("temp_users")
-        .delete()
+        .select("*")
         .eq("email", formData.email)
-    ]);
+        .single();
 
-    // Step 5: Success and redirect
-    showModal("Registration successful! Redirecting...");
-    setTimeout(() => router.push("/Ads"), 2000);
-  } catch (error) {
-    showModal("An error occurred. Please try again.");
-  }
-};
+      if (tempUserError || !tempUserData) {
+        showModal("Registration session expired. Please register again.");
+        setShowOtpField(false); // Go back to registration form
+        return;
+      }
+
+      // Step 2: Verify OTP
+      const { data: otpData, error: otpError } = await supabase
+        .from("otp_table")
+        .select("otp")
+        .eq("email", formData.email)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (otpError || !otpData) {
+        showModal("OTP verification failed. Please try again.");
+        return;
+      }
+
+      if (otpData.otp !== otp) {
+        showModal("Incorrect OTP. Please try again.");
+        return;
+      }
+
+      // Step 3: Create new user in authentication
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: tempUserData.email,
+        password: tempUserData.password,
+      });
+
+      if (signUpError) {
+        showModal("Failed to register user. Please try again.");
+        return;
+      }
+
+      // Step 4: Clean up temp data
+      await Promise.all([
+        supabase.from("otp_table").delete().eq("email", formData.email),
+        supabase.from("temp_users").delete().eq("email", formData.email),
+      ]);
+
+      // Step 5: Success and redirect
+      showModal("Registration successful! Redirecting...");
+      setTimeout(() => router.push("/Ads"), 2000);
+    } catch (error) {
+      showModal("An error occurred. Please try again.");
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     try {
-      // Step 1: Initiate Google Sign-In
       const { data: authData, error: signInError } =
         await supabase.auth.signInWithOAuth({
           provider: "google",
@@ -163,19 +147,17 @@ const handleOtpVerification = async () => {
         return;
       }
 
-      // Step 2: Wait for the user to be authenticated
       let user = null;
       for (let attempts = 0; attempts < 10; attempts++) {
-        // Attempt to fetch the authenticated user
         const { data: fetchedUser, error: userError } =
           await supabase.auth.getUser();
 
         if (!userError && fetchedUser?.user) {
           user = fetchedUser.user;
-          break; // Break out of the loop if user is successfully fetched
+          break;
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 500ms between attempts
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
 
       if (!user) {
@@ -184,14 +166,13 @@ const handleOtpVerification = async () => {
         return;
       }
 
-      // Step 3: Insert or update user data in `user_other_credentials`
       const { error: insertError } = await supabase
         .from("user_other_credentials")
         .upsert({
-          id: user.id, // Use the fetched user's ID
+          id: user.id,
           email: user.email,
-          phone_number: null, // Default phone number as null
-          role: "user", // Default role
+          phone_number: null,
+          role: "user",
         });
 
       if (insertError) {
@@ -200,9 +181,8 @@ const handleOtpVerification = async () => {
         return;
       }
 
-      // Success message and redirect
       showModal("Sign-in successful.");
-      router.push("/Ads"); // Redirect to the homepage
+      router.push("/Ads");
     } catch (error) {
       console.error("An unexpected error occurred during sign-in:", error);
       showModal("An unexpected error occurred. Please try again.");
@@ -213,7 +193,7 @@ const handleOtpVerification = async () => {
     setModal({ open: true, message });
     setTimeout(() => {
       setModal({ open: false, message: "" });
-    }, 3000); // Auto-close modal after 3 seconds
+    }, 3000);
   };
 
   return (
@@ -234,135 +214,215 @@ const handleOtpVerification = async () => {
       )}
 
       {/* Main Content */}
-      <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-        <form
-          onSubmit={handleSignUp}
-          className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1"
-        >
-          <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-            <div className="mt-12 flex flex-col items-center">
-              <h1 className="text-2xl xl:text-3xl font-extrabold">Sign up</h1>
-              <div className="w-full flex-1 mt-8">
-                <div className="flex flex-col items-center">
-                  {/* Google Sign-In Button */}
-                  <button
-                    type="button"
-                    onClick={handleGoogleSignIn}
-                    className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
+      <div className="font-[sans-serif] bg-gray-900 md:h-screen">
+        <div className="grid md:grid-cols-2 items-center gap-8 h-full">
+          <div className="max-md:order-1 p-4 hidden md:block">
+            <img
+              src="https://readymadeui.com/signin-image.webp"
+              className="lg:max-w-[80%] w-full h-full object-contain block mx-auto"
+              alt="login-image"
+            />
+          </div>
+
+          <div className="flex items-center md:p-8 p-6 bg-white md:rounded-tl-[55px] md:rounded-bl-[55px] h-full">
+            <form
+              onSubmit={handleSignUp}
+              className="max-w-lg w-full mx-auto"
+            >
+              <div className="mb-12">
+                <h3 className="text-gray-800 text-4xl font-bold">Sign up</h3>
+                <p className="text-gray-800 text-sm mt-4">
+                  Already have an account?
+                  <Link
+                    href="/login"
+                    className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap"
                   >
-                    <div className="bg-white p-2 rounded-full">
-                      <svg className="w-4" viewBox="0 0 533.5 544.3">
-                        <path
-                          d="M533.5 278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1 33.8-25.7 63.7-54.4 82.7v68h87.7c51.5-47.4 81.1-117.4 81.1-200.2z"
-                          fill="#4285f4"
-                        />
-                        <path
-                          d="M272.1 544.3c73.4 0 135.3-24.1 180.4-65.7l-87.7-68c-24.4 16.6-55.9 26-92.6 26-71 0-131.2-47.9-152.8-112.3H28.9v70.1c46.2 91.9 140.3 149.9 243.2 149.9z"
-                          fill="#34a853"
-                        />
-                        <path
-                          d="M119.3 324.3c-11.4-33.8-11.4-70.4 0-104.2V150H28.9c-38.6 76.9-38.6 167.5 0 244.4l90.4-70.1z"
-                          fill="#fbbc04"
-                        />
-                        <path
-                          d="M272.1 107.7c38.8-.6 76.3 14 104.4 40.8l77.7-77.7C405 24.6 339.7-.8 272.1 0 169.2 0 75.1 58 28.9 150l90.4 70.1c21.5-64.5 81.8-112.4 152.8-112.4z"
-                          fill="#ea4335"
-                        />
+                    Login here
+                  </Link>
+                </p>
+              </div>
+
+              {!showOtpField ? (
+                <>
+                  <div>
+                    <label className="text-gray-800 text-xs block mb-2">Email</label>
+                    <div className="relative flex items-center">
+                      <input
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        type="email"
+                        required
+                        className="w-full text-sm border-b border-gray-300 focus:border-gray-800 pl-2 pr-8 py-3 outline-none"
+                        placeholder="Enter email"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="#bbb"
+                        stroke="#bbb"
+                        className="w-[18px] h-[18px] absolute right-2"
+                        viewBox="0 0 682.667 682.667"
+                      >
+                        <defs>
+                          <clipPath id="a" clipPathUnits="userSpaceOnUse">
+                            <path d="M0 512h512V0H0Z" data-original="#000000"></path>
+                          </clipPath>
+                        </defs>
+                        <g clipPath="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
+                          <path
+                            fill="none"
+                            strokeMiterlimit="10"
+                            strokeWidth="40"
+                            d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
+                            data-original="#000000"
+                          ></path>
+                        </g>
                       </svg>
                     </div>
-                    <span className="ml-4">Sign Up with Google</span>
-                  </button>
+                  </div>
 
-                  {/* Divider */}
-                  <div className="my-12 border-b text-center">
-                    <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-                      Or sign up with e-mail
+                  <div className="mt-8">
+                    <label className="text-gray-800 text-xs block mb-2">Phone Number</label>
+                    <div className="relative flex items-center">
+                      <input
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleChange}
+                        type="text"
+                        required
+                        className="w-full text-sm border-b border-gray-300 focus:border-gray-800 pl-2 pr-8 py-3 outline-none"
+                        placeholder="Enter phone number"
+                      />
                     </div>
                   </div>
 
-                  {/* Sign-Up Form */}
-                  <div className="mx-auto max-w-xs">
-                    {!showOtpField ? (
-                      <>
-                        <input
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                          type="email"
-                          placeholder="Email"
-                        />
-                        <input
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleChange}
-                          className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                          type="text"
-                          placeholder="Phone Number"
-                        />
-                        <input
-                          name="password"
-                          value={formData.password}
-                          onChange={handleChange}
-                          className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                          type="password"
-                          placeholder="Password"
-                        />
-                        <input
-                          name="confirmPassword"
-                          value={formData.confirmPassword}
-                          onChange={handleChange}
-                          className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                          type="password"
-                          placeholder="Confirm Password"
-                        />
-                        <button
-                          type="submit"
-                          disabled={loading}
-                          className={`mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none ${
-                            loading && "cursor-not-allowed opacity-70"
-                          }`}
-                        >
-                          {loading ? "Signing up..." : "Sign Up"}
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <input
-                          name="otp"
-                          value={otp}
-                          onChange={(e) => setOtp(e.target.value)}
-                          className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                          type="text"
-                          placeholder="Enter OTP"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleOtpVerification}
-                          className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-                        >
-                          Verify OTP
-                        </button>
-                      </>
-                    )}
+                  <div className="mt-8">
+                    <label className="text-gray-800 text-xs block mb-2">Password</label>
+                    <div className="relative flex items-center">
+                      <input
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        type="password"
+                        required
+                        className="w-full text-sm border-b border-gray-300 focus:border-gray-800 pl-2 pr-8 py-3 outline-none"
+                        placeholder="Enter password"
+                      />
+                    </div>
                   </div>
-                </div>
+
+                  <div className="mt-8">
+                    <label className="text-gray-800 text-xs block mb-2">Confirm Password</label>
+                    <div className="relative flex items-center">
+                      <input
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        type="password"
+                        required
+                        className="w-full text-sm border-b border-gray-300 focus:border-gray-800 pl-2 pr-8 py-3 outline-none"
+                        placeholder="Confirm password"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-12">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className={`w-full py-3 px-6 text-sm font-semibold tracking-wider rounded-full text-white ${
+                        loading ? "bg-gray-400 cursor-not-allowed" : "bg-gray-800 hover:bg-[#222]"
+                      }`}
+                    >
+                      {loading ? "Signing up..." : "Sign up"}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="mt-8">
+                    <label className="text-gray-800 text-xs block mb-2">OTP</label>
+                    <div className="relative flex items-center">
+                      <input
+                        name="otp"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        type="text"
+                        required
+                        className="w-full text-sm border-b border-gray-300 focus:border-gray-800 pl-2 pr-8 py-3 outline-none"
+                        placeholder="Enter OTP"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-12">
+                    <button
+                      type="button"
+                      onClick={handleOtpVerification}
+                      className="w-full py-3 px-6 text-sm font-semibold tracking-wider rounded-full text-white bg-gray-800 hover:bg-[#222]"
+                    >
+                      Verify OTP
+                    </button>
+                  </div>
+                </>
+              )}
+
+              <div className="my-4 flex items-center gap-4">
+                <hr className="w-full border-gray-300" />
+                <p className="text-sm text-gray-800 text-center">or</p>
+                <hr className="w-full border-gray-300" />
               </div>
-            </div>
+
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                className="w-full flex items-center justify-center gap-4 py-3 px-6 text-sm font-semibold tracking-wider text-gray-800 border border-gray-300 rounded-full bg-gray-50 hover:bg-gray-100 focus:outline-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20px"
+                  className="inline"
+                  viewBox="0 0 512 512"
+                >
+                  <path
+                    fill="#fbbd00"
+                    d="M120 256c0-25.367 6.989-49.13 19.131-69.477v-86.308H52.823C18.568 144.703 0 198.922 0 256s18.568 111.297 52.823 155.785h86.308v-86.308C126.989 305.13 120 281.367 120 256z"
+                    data-original="#fbbd00"
+                  />
+                  <path
+                    fill="#0f9d58"
+                    d="m256 392-60 60 60 60c57.079 0 111.297-18.568 155.785-52.823v-86.216h-86.216C305.044 385.147 281.181 392 256 392z"
+                    data-original="#0f9d58"
+                  />
+                  <path
+                    fill="#31aa52"
+                    d="m139.131 325.477-86.308 86.308a260.085 260.085 0 0 0 22.158 25.235C123.333 485.371 187.62 512 256 512V392c-49.624 0-93.117-26.72-116.869-66.523z"
+                    data-original="#31aa52"
+                  />
+                  <path
+                    fill="#3c79e6"
+                    d="M512 256a258.24 258.24 0 0 0-4.192-46.377l-2.251-12.299H256v120h121.452a135.385 135.385 0 0 1-51.884 55.638l86.216 86.216a260.085 260.085 0 0 0 25.235-22.158C485.371 388.667 512 324.38 512 256z"
+                    data-original="#3c79e6"
+                  />
+                  <path
+                    fill="#cf2d48"
+                    d="m352.167 159.833 10.606 10.606 84.853-84.852-10.606-10.606C388.668 26.629 324.381 0 256 0l-60 60 60 60c36.326 0 70.479 14.146 96.167 39.833z"
+                    data-original="#cf2d48"
+                  />
+                  <path
+                    fill="#eb4132"
+                    d="M256 120V0C187.62 0 123.333 26.629 74.98 74.98a259.849 259.849 0 0 0-22.158 25.235l86.308 86.308C162.883 146.72 206.376 120 256 120z"
+                    data-original="#eb4132"
+                  />
+                </svg>
+                Continue with Google
+              </button>
+            </form>
           </div>
-          <div className="flex-1 bg-indigo-100 text-center hidden lg:flex">
-            <div
-              className="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
-              style={{
-                backgroundImage:
-                  "url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg')",
-              }}
-            ></div>
-          </div>
-        </form>
+        </div>
       </div>
     </>
   );
 };
 
-export default page;
+export default Page;
