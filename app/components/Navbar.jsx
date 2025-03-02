@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "../supabase"; // Import your Supabase client
 import { Menu } from "lucide-react";
 import Link from "next/link";
@@ -26,13 +26,14 @@ const Navbar = () => {
   const [userProvider, setUserProvider] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-
   const [searchQuery, setSearchQuery] = useState("");
+
+  const dropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Update this to match your actual ads page route
       router.push(`/Ads?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
@@ -56,32 +57,31 @@ const Navbar = () => {
         } else {
           setUserRole("user");
         }
-
-        // Fetch provider information
-        // const provider = loggedUser?.app_metadata?.provider;
-        // setUserProvider(provider);
-
-        // // Fetch profile image from Supabase storage
-        // const { data: profileData, error: profileError } =
-        //   await supabase.storage
-        //     .from("profiles_images")
-        //     .getPublicUrl(`${loggedUser.id}.jpg`); // Use .jpg instead of .jpeg
-
-        // if (profileError) {
-        //   console.error("Error fetching profile image URL:", profileError);
-        //   return;
-        // }
-
-        // if (profileData?.publicUrl) {
-        //   console.log("Generated Profile URL:", profileData.publicUrl);
-        //   setProfileImage(profileData.publicUrl);
-        // } else {
-        //   console.log("No profile image URL found");
-        // }
       }
     };
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+
+
+
+
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -101,7 +101,6 @@ const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Add this function to handle protected navigation
   const handleProtectedNavigation = (path) => {
     if (!user) {
       router.push("/login");
@@ -191,7 +190,7 @@ const Navbar = () => {
         {user ? (
           <>
             {/* User Icon and Dropdown */}
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <div
                 className="w-10 h-10 rounded-full overflow-hidden border-2 border-white cursor-pointer"
                 onClick={toggleDropdown}
@@ -203,7 +202,6 @@ const Navbar = () => {
                     width={40}
                     height={40}
                     className="object-cover"
-                    // onError={() => setProfileImage(null)}
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full bg-[#5FBDFF] text-white text-lg font-bold uppercase bg-gradient-to-r from-blue-700 to-[#B06AB3]">
@@ -261,7 +259,7 @@ const Navbar = () => {
 
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg py-4 z-50 md:hidden">
+        <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg py-4 z-50 md:hidden" ref={mobileMenuRef}>
           {/* Protected Mobile Links */}
           {user && (
             <>
@@ -274,7 +272,6 @@ const Navbar = () => {
                     width={40}
                     height={40}
                     className="rounded-full"
-                    // onError={() => setProfileImage(null)}
                   />
                 ) : (
                   <div className="w-10 h-10 flex items-center justify-center bg-black text-white text-lg font-bold rounded-full uppercase bg-gradient-to-r from-blue-700 to-[#B06AB3]">

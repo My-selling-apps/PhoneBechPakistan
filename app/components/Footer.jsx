@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { FaInstagram, FaFacebookF, FaTwitter, FaTiktok } from "react-icons/fa";
+import { FaInstagram, FaFacebookF, FaYoutube, FaTiktok } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -26,9 +26,9 @@ export default function Footer() {
                 <FaFacebookF className="text-lg" />
               </button>
 
-              {/* Twitter Icon */}
-              <button className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-pink-400 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all">
-                <FaTwitter className="text-lg" />
+              {/* YouTube Icon */}
+              <button className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all">
+                <FaYoutube className="text-lg" />
               </button>
 
               {/* TikTok Icon */}
@@ -109,24 +109,7 @@ export default function Footer() {
           <div className="w-full md:w-4/12 px-4 mx-auto text-center">
             <div className="text-sm text-blueGray-500 font-semibold py-1">
               Copyright © {new Date().getFullYear()}
-              <a
-                href="https://www.creative-tim.com/product/notus-js"
-                className="text-blueGray-500 hover:text-gray-800"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {" "}
-                Phone
-              </a>{" "}
-              <a
-                href="https://www.creative-tim.com?ref=njs-profile"
-                className="text-blueGray-500 hover:text-blueGray-800"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {" "}
-                Bach
-              </a>
+              {" "}PhoneBechPk
               .
             </div>
           </div>

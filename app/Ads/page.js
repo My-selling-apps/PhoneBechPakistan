@@ -9,6 +9,7 @@ import BrandLogoSlider from "../components/BrandLogoSlider";
 import { useRouter } from "next/navigation";
 import Loader from "../components/Loader";
 import { useSearchParams } from "next/navigation";
+import StickyButton from "../components/StickyButton";
 
 const AdsPage = () => {
   const [ads, setAds] = useState([]);
@@ -243,10 +244,49 @@ const AdsPage = () => {
     router.push("/Ads"); // Clear URL search params
   };
 
-  // Add this function inside your AdsPage component
-  const handleAdClick = (adId) => {
-    router.push(`/AdView/${adId}`);
+  // // Add this function inside your AdsPage component
+  // const handleAdClick = (adId) => {
+  //   router.push(`/AdView/${adId}`);
+  // };
+
+
+    // Handle Sticky Button Click
+    const handleStickyButtonClick = () => {
+      if (user) {
+        // User is logged in, redirect to /Ads
+        router.push("/AdPost");
+      } else {
+        // User is not logged in, redirect to /register
+        router.push("/register");
+      }
+    };
+
+
+ // Handle Click Outside Sidebar
+ useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      event.stopPropagation(); // Prevent click from propagating to ads
+      setIsSidebarVisible(false);
+    }
   };
+
+  if (isSidebarVisible) {
+    document.addEventListener("mousedown", handleClickOutside);
+  } else {
+    document.removeEventListener("mousedown", handleClickOutside);
+  }
+
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, [isSidebarVisible]);
+
+// Handle Ad Click
+const handleAdClick = (adId) => {
+  if (!isSidebarVisible) {
+    // Only navigate to ad details if sidebar is not visible
+    router.push(`/AdView/${adId}`);
+  }
+};
 
   return (
     <>
@@ -256,6 +296,20 @@ const AdsPage = () => {
       </div>
 
       <div className="flex flex-col min-h-screen mt-10 relative">
+        {/* Sticky Button */}
+        <StickyButton
+          buttonText="Sell"
+          onClick={handleStickyButtonClick} // Pass the click handler
+        />
+
+        {/* Overlay for Small Devices */}
+        {isSidebarVisible && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+            onClick={() => setIsSidebarVisible(false)}
+          ></div>
+        )}
+
         <div className="flex flex-row md:px-2 md:py-8 mx-auto w-full max-w-[1500px] gap-3 relative">
           {/* Filter Button for Mobile */}
           <button
@@ -273,13 +327,12 @@ const AdsPage = () => {
               transition-transform duration-500 ease-in-out  overflow-auto
               ${
                 isSidebarVisible
-                  ? "translate-x-0 opacity-100"
+                  ? "translate-x-0 opacity-100  z-[100]"
                   : "-translate-x-full lg:translate-x-0 opacity-100"
               }
             `}
           >
             {/* Close Button for Mobile */}
-
             <button
               className="lg:hidden absolute top-4 right-4 text-gray-600 hover:text-black transition-all"
               onClick={() => setIsSidebarVisible(false)}
@@ -625,5 +678,3 @@ export default function AdsPageWrapper() {
     </Suspense>
   );
 }
-
-//End

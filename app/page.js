@@ -1,25 +1,44 @@
-
-
 "use client";
 
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import BrandLogoSlider from "./components/BrandLogoSlider";
 import ImageSlider from "./components/ImageSlider";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import VideoCardComponent from "./components/VideoCardComponent";
 import AdsComponent from "./components/AdsComponent";
 import Footer from "./components/Footer";
 import Link from "next/link";
+import StickyButton from "./components/StickyButton"; // Import the StickyButton component
+import { supabase } from "./supabase"; // Import your Supabase client
+import { useRouter } from "next/navigation"
 
 export default function Home() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const [user, setUser] = useState(null); // State to track user login status
+    const router = useRouter();
 
   useEffect(() => {
     // Ensuring the global styles are applied once the app is loaded
-    document.documentElement.style.scrollBehavior = 'smooth'; // Optional: for smooth scrolling
+    document.documentElement.style.scrollBehavior = "smooth"; // Optional: for smooth scrolling
+
+    // Fetch user session to check login status
+    const fetchUser = async () => {
+      const { data: session } = await supabase.auth.getSession();
+      if (session?.session?.user) {
+        setUser(session.session.user); // Set user if logged in
+      }
+    };
+
+    fetchUser();
   }, []);
 
+  const handleStickyButtonClick = () => {
+    if (!user) {
+
+      router.push("/register");
+    } 
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -41,12 +60,11 @@ export default function Home() {
 
           {/* Video Card Component */}
           <div>
-            
             <VideoCardComponent />
           </div>
 
           {/* Boost Ad Section */}
-          <div className="mt-36">
+          <div className="mt-20">
             <div className="bg-gradient-to-r from-blue-700 to-[#B06AB3] font-sans px-6 py-12">
               <div className="container mx-auto flex flex-col justify-center items-center text-center">
                 <h2 className="text-white sm:text-4xl text-3xl font-bold mb-4">
@@ -70,11 +88,10 @@ export default function Home() {
         {/* Load More Button */}
         <div className="flex justify-center mt-8">
           <button
-            
             className="px-6 py-3 text-white font-semibold bg-gradient-to-r from-blue-700 to-[#B06AB3] transition-all rounded-lg shadow-md"
             style={{ borderRadius: "0px 40px 0px 40px" }}
           >
-            <Link href='/Ads'>Expoler More</Link>
+            <Link href="/Ads">Explore More</Link>
           </button>
         </div>
       </main>
@@ -83,6 +100,9 @@ export default function Home() {
       <div className="mt-36">
         <Footer />
       </div>
+
+      {/* Conditionally Render StickyButton */}
+      {!user && <StickyButton  onClick={handleStickyButtonClick} />}
     </div>
   );
 }

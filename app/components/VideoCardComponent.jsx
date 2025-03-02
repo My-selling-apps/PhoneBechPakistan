@@ -25,7 +25,7 @@ const VideoCardComponent = () => {
   };
 
   return (
-    <div className="relative min-h-[235px] top-[100px] md:top-[80px] bg-white">
+    <div className="relative min-h-[235px] top-[29px] md:top-[80px] bg-white">
       {/* Desktop Grid View */}
       <div className="hidden md:flex flex-wrap justify-center bg-white">
         {videos.map((video, index) => (

@@ -58,7 +58,7 @@ export default function AdPost() {
         formData.append("image", image);
 
         try {
-          const response = await fetch("https://51.20.4.136:8000/api/predict/", {
+          const response = await fetch("http://13.60.241.230:8000/api/predict/", {
             method: "POST",
             body: formData,
           });
@@ -69,6 +69,7 @@ export default function AdPost() {
             );
             throw new Error("Prediction API request failed");
           }
+          resetForm();
 
           const data = await response.json();
           console.log(
@@ -244,7 +245,7 @@ export default function AdPost() {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto p-8">
+      <div className="container mx-auto p-1 mt-5">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           Post Your Ad
         </h1>
