@@ -32,6 +32,65 @@ const AdsPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  useEffect(() => {
+    const query = searchParams.get("search");
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [searchParams]);
+
+  // Fetch Ads and User
+  useEffect(() => {
+    const fetchAds = async () => {
+      try {
+        setLoading(true); // Start loading
+        const { data, error } = await supabase.from("user_ads").select("*");
+        if (error) throw error;
+
+        const processedAds = data.map((ad) => ({
+          ...ad,
+          images: ad.images
+            ? Array.isArray(ad.images)
+              ? ad.images
+              : JSON.parse(ad.images)
+            : [],
+        }));
+
+        console.log("Fetched Ads:", processedAds); // Debugging
+        setAds(processedAds);
+
+        // Add 2 second delay after successful fetch
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+      } catch (error) {
+        console.error("Error fetching ads:", error.message);
+        setLoading(false); // Error case mein loading turant band kar dein
+      }
+    };
+
+    fetchAds();
+  }, []);
+
+  // Update Visible Ads when filters are reset
+  useEffect(() => {
+    const filteredAds = filterAds(ads);
+    const startIndex = 0;
+    const endIndex = currentPage * 12;
+    setVisibleAds(filteredAds.slice(startIndex, endIndex));
+  }, [
+    ads,
+    currentPage,
+    selectedLocation,
+    selectedBrands,
+    selectedConditions,
+    priceRange,
+  ]);
+
+  useEffect(() => {
+
+  }, [selectedLocation, selectedBrands, selectedConditions, priceRange]);
+
   // Filter Ads Function
   const filterAds = (ads) => {
     return ads.filter((ad) => {
@@ -73,62 +132,10 @@ const AdsPage = () => {
     });
   };
 
-  useEffect(() => {
-    const query = searchParams.get("search");
-    if (query) {
-      setSearchQuery(query);
-    }
-  }, [searchParams]);
-
-  // Fetch Ads and User
-  useEffect(() => {
-    const fetchAds = async () => {
-      try {
-        setLoading(true); // Start loading
-
-        // Check if ads are available in local storage
-        const cachedAds = localStorage.getItem("cachedAds");
-        if (cachedAds) {
-          setAds(JSON.parse(cachedAds));
-          setLoading(false);
-          return;
-        }
-
-        // Fetch ads from Supabase if not available in local storage
-        const { data, error } = await supabase.from("user_ads").select("*");
-        if (error) throw error;
-
-        const processedAds = data.map((ad) => ({
-          ...ad,
-          images: ad.images
-            ? Array.isArray(ad.images)
-              ? ad.images
-              : JSON.parse(ad.images)
-            : [],
-        }));
-
-        console.log("Fetched Ads:", processedAds); // Debugging
-        setAds(processedAds);
-
-        // Save ads to local storage
-        localStorage.setItem("cachedAds", JSON.stringify(processedAds));
-
-        // Add 2 second delay after successful fetch
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
-      } catch (error) {
-        console.error("Error fetching ads:", error.message);
-        setLoading(false); // Error case mein loading turant band kar dein
-      }
-    };
-
-    fetchAds();
-  }, []);
-
-  // Update Visible Ads when filters are reset
+  // Update Visible Ads
   useEffect(() => {
     const filteredAds = filterAds(ads);
+    // console.log("Visible Ads:", filteredAds.slice(0, currentPage * 12)); // Debugging
     const startIndex = 0;
     const endIndex = currentPage * 12;
     setVisibleAds(filteredAds.slice(startIndex, endIndex));
@@ -139,6 +146,7 @@ const AdsPage = () => {
     selectedBrands,
     selectedConditions,
     priceRange,
+    searchQuery, // Add searchQuery to dependencies
   ]);
 
   // Handle Click Outside Sidebar
@@ -158,6 +166,67 @@ const AdsPage = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isSidebarVisible]);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUser(user);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // Handle Favourite Click
+  const handleFavouriteClick = async (event, adId) => {
+    event.stopPropagation();
+    if (!user) {
+      alert("Please login to add to favourites");
+      return;
+    }
+
+    try {
+      const newFavorites = new Set(favoriteAds);
+      let action; // Track whether we are adding or removing
+
+      if (newFavorites.has(adId)) {
+        // Remove from favorites
+        newFavorites.delete(adId);
+        action = "delete";
+      } else {
+        // Add to favorites
+        newFavorites.add(adId);
+        action = "insert";
+      }
+
+      setFavoriteAds(newFavorites); // Update UI immediately
+
+      let supabaseQuery;
+      if (action === "insert") {
+        supabaseQuery = supabase
+          .from("user_fav_ads")
+          .insert([{ user_id: user.id, ad_id: adId }]);
+      } else {
+        supabaseQuery = supabase
+          .from("user_fav_ads")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("ad_id", adId);
+      }
+
+      const { error } = await supabaseQuery;
+      if (error) {
+        console.error("Error updating favorites:", error);
+        alert(`Error: ${error.message}`);
+        return;
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      alert("Something went wrong!");
+    }
+  };
 
   // Load More Ads
   const loadMoreAds = () => {
@@ -175,92 +244,47 @@ const AdsPage = () => {
     router.push("/Ads"); // Clear URL search params
   };
 
-  // Handle Sticky Button Click
-  const handleStickyButtonClick = () => {
-    if (user) {
-      // User is logged in, redirect to /Ads
-      router.push("/AdPost");
-    } else {
-      // User is not logged in, redirect to /register
-      router.push("/register");
-    }
-  };
-
-  // Handle Ad Click
-  const handleAdClick = (adId) => {
-    if (!isSidebarVisible) {
-      // Only navigate to ad details if sidebar is not visible
-      router.push(`/AdView/${adId}`);
-    }
-  };
+  // // Add this function inside your AdsPage component
+  // const handleAdClick = (adId) => {
+  //   router.push(`/AdView/${adId}`);
+  // };
 
 
-  // Fetch User on Component Mount
-useEffect(() => {
-  const fetchUser = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    // Handle Sticky Button Click
+    const handleStickyButtonClick = () => {
       if (user) {
-        setUser(user); // Set user state if logged in
+        // User is logged in, redirect to /Ads
+        router.push("/AdPost");
+      } else {
+        // User is not logged in, redirect to /register
+        router.push("/register");
       }
-    } catch (error) {
-      console.error("Error fetching user:", error.message);
+    };
+
+
+ // Handle Click Outside Sidebar
+ useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      event.stopPropagation(); // Prevent click from propagating to ads
+      setIsSidebarVisible(false);
     }
   };
 
-  fetchUser(); // Call the function to fetch user
-}, []); // Empty dependency array to run only once on mount
-
-// Handle Favourite Click
-const handleFavouriteClick = async (event, adId) => {
-  event.stopPropagation();
-
-  // Check if user is logged in
-  if (!user) {
-    alert("Please login to add to favourites");
-    return;
+  if (isSidebarVisible) {
+    document.addEventListener("mousedown", handleClickOutside);
+  } else {
+    document.removeEventListener("mousedown", handleClickOutside);
   }
 
-  try {
-    const newFavorites = new Set(favoriteAds);
-    let action; // Track whether we are adding or removing
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, [isSidebarVisible]);
 
-    if (newFavorites.has(adId)) {
-      // Remove from favorites
-      newFavorites.delete(adId);
-      action = "delete";
-    } else {
-      // Add to favorites
-      newFavorites.add(adId);
-      action = "insert";
-    }
-
-    setFavoriteAds(newFavorites); // Update UI immediately
-
-    let supabaseQuery;
-    if (action === "insert") {
-      supabaseQuery = supabase
-        .from("user_fav_ads")
-        .insert([{ user_id: user.id, ad_id: adId }]);
-    } else {
-      supabaseQuery = supabase
-        .from("user_fav_ads")
-        .delete()
-        .eq("user_id", user.id)
-        .eq("ad_id", adId);
-    }
-
-    const { error } = await supabaseQuery;
-    if (error) {
-      console.error("Error updating favorites:", error);
-      alert(`Error: ${error.message}`);
-      return;
-    }
-  } catch (err) {
-    console.error("Unexpected error:", err);
-    alert("Something went wrong!");
+// Handle Ad Click
+const handleAdClick = (adId) => {
+  if (!isSidebarVisible) {
+    // Only navigate to ad details if sidebar is not visible
+    router.push(`/AdView/${adId}`);
   }
 };
 
