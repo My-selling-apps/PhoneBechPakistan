@@ -58,7 +58,7 @@ export default function AdPost() {
         formData.append("image", image);
 
         try {
-          const response = await fetch("http://16.171.16.176:8000/api/predict/", {
+          const response = await fetch("https://16.171.16.176:8000/api/predict/", {
             method: "POST",
             body: formData,
           });
