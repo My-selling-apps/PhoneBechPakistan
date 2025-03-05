@@ -1,0 +1,53 @@
+{
+    "Islamabad Capital Territory, Pakistan": [
+      "Sector F-5",
+      "Sector F-6",
+      "Sector F-7",
+      "Sector G-6",
+      "Sector G-7",
+      "Sector G-8",
+      "Sector H-8",
+      "Sector H-9",
+      "Sector I-8",
+      "Sector I-9",
+      "Sector I-10"
+    ],
+    "Lahore, Pakistan": [
+      "Gulberg",
+      "Defence",
+      "Model Town",
+      "Johar Town",
+      "Faisal Town",
+      "Wapda Town",
+      "Cantt",
+      "DHA",
+      "Bahria Town",
+      "Iqbal Town",
+      "Township"
+    ],
+    "Karachi, Pakistan": [
+      "Clifton",
+      "Defence",
+      "Gulshan-e-Iqbal",
+      "North Nazimabad",
+      "Gulistan-e-Johar",
+      "Malir",
+      "Saddar",
+      "Korangi",
+      "Landhi",
+      "Shah Faisal",
+      "Lyari"
+    ],
+    "Peshawar, Pakistan": [
+      "Hayatabad",
+      "University Town",
+      "Cantt",
+      "Gulbahar",
+      "Warsak Road",
+      "Kohat Road",
+      "Charsadda Road",
+      "Ring Road",
+      "Jamrud Road",
+      "Sadar"
+    ]
+  }
