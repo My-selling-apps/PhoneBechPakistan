@@ -61,11 +61,11 @@ export default function StickyButton({ buttonText = "Sign up", onClick }) {
       </div>
 
       {/* Add CSS for rotation animation */}
-      <style jsx>{`
+      {/* <style jsx>{`
         .rotate-360 {
           transform: rotate(360deg);
         }
-      `}</style>
+      `}</style> */}
     </div>
   );
 }

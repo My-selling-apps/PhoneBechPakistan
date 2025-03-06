@@ -310,7 +310,7 @@ const handleAdClick = (adId) => {
           ></div>
         )}
 
-        <div className="flex flex-row md:px-2 md:py-8 mx-auto w-full max-w-[1500px] gap-3 relative">
+        <div className="flex flex-row md:px-1 md:py-4 mx-auto w-full max-w-[1500px] gap-3 relative">
           {/* Filter Button for Mobile */}
           <button
             className="lg:hidden fixed bottom-6 left-6 z-50  bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white p-3 rounded-full shadow-lg"
@@ -526,7 +526,7 @@ const handleAdClick = (adId) => {
         ${
           isListView
             ? "space-y-4"
-            : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-2"
+            : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-2"
         }
       `}
                 >

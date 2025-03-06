@@ -55,10 +55,10 @@ const AdsComponent = () => {
   }, []);
 
   return (
-    <div className="flex-grow font-[sans-serif] p-4 mx-auto lg:max-w-5xl max-w-2xl">
+    <div className="flex-grow font-[sans-serif] p-1 mx-auto lg:max-w-5xl max-w-2xl">
       <h2 className="text-xl sm:text-3xl font-extrabold text-gray-800 mb-6 sm:mb-8 text-center">Featured Phone Ads</h2>
   
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-6">
         {ads.length > 0 ? (
           ads.map((ad) => (
             // Added a fallback for the key in case feature_id is not available
