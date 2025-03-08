@@ -17,6 +17,7 @@ import {
   FaChevronRight 
 } from "react-icons/fa";
 import BrandLogoSlider from "@/app/components/BrandLogoSlider";
+import Loader from "@/app/components/Loader";
 
 const AdViewPage = () => {
   const [ad, setAd] = useState(null);
@@ -137,7 +138,7 @@ const AdViewPage = () => {
       <>
         <Navbar />
         <div className="flex justify-center items-center min-h-screen">
-          <p>Loading...</p>
+          <Loader/>
         </div>
         <Footer />
       </>
