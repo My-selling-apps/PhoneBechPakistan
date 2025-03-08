@@ -215,7 +215,7 @@ const AdViewPage = () => {
               </div>
 
               {/* Thumbnail Navigation */}
-              <div className="mt-6 flex flex-wrap justify-center gap-4 mx-auto">
+              <div className="mt-6 flex  justify-center gap-4 mx-auto">
                 {ad.images.map((image, imageIndex) => (
                   <div
                     key={imageIndex}
