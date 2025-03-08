@@ -6,6 +6,7 @@ import Navbar from "@/app/components/Navbar";
 import { supabase } from "../supabase";
 import { v4 as uuidv4 } from "uuid";
 import Footer from "../components/Footer";
+import Loader from "../components/Loader"; // Import Loader component
 
 // Define sectors for each location
 const locationSectors = {
@@ -38,7 +39,7 @@ export default function AdPost() {
   const [phone, setPhone] = useState("");
   const [isDeliverable, setIsDeliverable] = useState(false);
   const [sold, setSold] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state
   const [condition, setCondition] = useState("");
 
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function AdPost() {
 
   const handlePostAd = async () => {
     try {
-      setLoading(true);
+      setLoading(true); // Start loading
       console.log("Starting ad posting process...");
 
       const { data: session, error: sessionError } =
@@ -226,6 +227,8 @@ export default function AdPost() {
         stack: error.stack,
       });
       alert(`Error: ${error.message}`);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -669,8 +672,9 @@ export default function AdPost() {
             type="button"
             onClick={handlePostAd}
             className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition text-lg font-semibold"
+            disabled={loading} // Disable button when loading
           >
-            Post Ad
+            {loading ? <Loader /> : "Post Ad"}
           </button>
         </form>
       </div>
