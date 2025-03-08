@@ -260,6 +260,16 @@ const AdViewPage = () => {
                 </div>
               </div>
 
+              {/* Display Sector */}
+              {ad.sector && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center space-x-2">
+                    <FaMapMarkerAlt className="text-purple-600" />
+                    <span className="text-gray-700 font-medium">{ad.sector}</span>
+                  </div>
+                </div>
+              )}
+
               <div>
                 <label className="text-sm font-medium text-purple-600 mb-1 block">
                   Description

@@ -11,6 +11,24 @@ import Loader from "../components/Loader";
 import { useSearchParams } from "next/navigation";
 import StickyButton from "../components/StickyButton";
 
+// Define sectors for each location
+const locationSectors = {
+  "Islamabad Capital Territory, Pakistan": [
+    "Sector F-5",
+    "Sector G-6",
+    "Sector H-8",
+    "Sector I-9",
+    "Sector D-12",
+    "Other",
+  ],
+  "Azad Kashmir, Pakistan": ["Muzaffarabad", "Mirpur", "Rawalakot", "Other"],
+  "Balochistan, Pakistan": ["Quetta", "Gwadar", "Khuzdar", "Other"],
+  "Khyber Pakhtunkhwa, Pakistan": ["Peshawar", "Abbottabad", "Mardan", "Other"],
+  "Northern Areas, Pakistan": ["Gilgit", "Skardu", "Hunza", "Other"],
+  "Punjab, Pakistan": ["Lahore", "Faisalabad", "Rawalpindi", "Other"],
+  "Sindh, Pakistan": ["Karachi", "Hyderabad", "Sukkur", "Other"],
+};
+
 const AdsPage = () => {
   const [ads, setAds] = useState([]);
   const [visibleAds, setVisibleAds] = useState([]);
@@ -26,6 +44,7 @@ const AdsPage = () => {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedConditions, setSelectedConditions] = useState([]);
+  const [selectedSectors, setSelectedSectors] = useState([]); // New state for sectors
   const [priceRange, setPriceRange] = useState([250, 1000000]); // Min and Max Price
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,7 +75,6 @@ const AdsPage = () => {
             : [],
         }));
 
-        // console.log("Fetched Ads:", processedAds); // Debugging
         setAds(processedAds);
 
         // Add 2 second delay after successful fetch
@@ -72,26 +90,21 @@ const AdsPage = () => {
     fetchAds();
   }, []);
 
-
-// Single, consolidated useEffect for updating visible ads
-useEffect(() => {
-  const filteredAds = filterAds(ads);
-  const adsToShow = filteredAds.slice(0, currentPage * 12);
-  // console.log(`Showing ${adsToShow.length} ads out of ${filteredAds.length} filtered ads (page ${currentPage})`);
-  setVisibleAds(adsToShow);
-}, [
-  ads,
-  currentPage,
-  selectedLocation,
-  selectedBrands,
-  selectedConditions,
-  priceRange,
-  searchQuery,
-]);
-
+  // Single, consolidated useEffect for updating visible ads
   useEffect(() => {
-
-  }, [selectedLocation, selectedBrands, selectedConditions, priceRange]);
+    const filteredAds = filterAds(ads);
+    const adsToShow = filteredAds.slice(0, currentPage * 12);
+    setVisibleAds(adsToShow);
+  }, [
+    ads,
+    currentPage,
+    selectedLocation,
+    selectedBrands,
+    selectedConditions,
+    selectedSectors, // Include selectedSectors in dependency array
+    priceRange,
+    searchQuery,
+  ]);
 
   // Filter Ads Function
   const filterAds = (ads) => {
@@ -125,6 +138,14 @@ useEffect(() => {
         return false;
       }
 
+      // Filter by Sector
+      if (
+        selectedSectors.length > 0 &&
+        !selectedSectors.includes(ad.sector)
+      ) {
+        return false;
+      }
+
       // Filter by Price Range
       if (ad.price < priceRange[0] || ad.price > priceRange[1]) {
         return false;
@@ -133,8 +154,6 @@ useEffect(() => {
       return true;
     });
   };
-
-
 
   // Handle Click Outside Sidebar
   useEffect(() => {
@@ -221,60 +240,53 @@ useEffect(() => {
   };
 
   // Reset Filters Function
+  const resetFilters = () => {
+    setSelectedLocation("");
+    setSelectedBrands([]);
+    setSelectedConditions([]);
+    setSelectedSectors([]); // Reset sectors
+    setPriceRange([250, 1000000]); // Reset to default price range
+    setCurrentPage(1); // Reset to the first page
+    setSearchQuery(""); // Reset search query
+    router.push("/Ads"); // Clear URL search params
+  };
 
-const resetFilters = () => {
-  setSelectedLocation("");
-  setSelectedBrands([]);
-  setSelectedConditions([]);
-  setPriceRange([250, 1000000]); // Reset to default price range
-  setCurrentPage(1); // Reset to the first page
-  setSearchQuery(""); // Reset search query
-  router.push("/Ads"); // Clear URL search params
-};
-
-  // // Add this function inside your AdsPage component
-  // const handleAdClick = (adId) => {
-  //   router.push(`/AdView/${adId}`);
-  // };
-
-
-    // Handle Sticky Button Click
-    const handleStickyButtonClick = () => {
-      if (user) {
-        // User is logged in, redirect to /Ads
-        router.push("/AdPost");
-      } else {
-        // User is not logged in, redirect to /register
-        router.push("/register");
-      }
-    };
-
-
- // Handle Click Outside Sidebar
- useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-      event.stopPropagation(); // Prevent click from propagating to ads
-      setIsSidebarVisible(false);
+  // Handle Sticky Button Click
+  const handleStickyButtonClick = () => {
+    if (user) {
+      // User is logged in, redirect to /Ads
+      router.push("/AdPost");
+    } else {
+      // User is not logged in, redirect to /register
+      router.push("/register");
     }
   };
 
-  if (isSidebarVisible) {
-    document.addEventListener("mousedown", handleClickOutside);
-  } else {
-    document.removeEventListener("mousedown", handleClickOutside);
-  }
+  // Handle Click Outside Sidebar
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        event.stopPropagation(); // Prevent click from propagating to ads
+        setIsSidebarVisible(false);
+      }
+    };
 
-  return () => document.removeEventListener("mousedown", handleClickOutside);
-}, [isSidebarVisible]);
+    if (isSidebarVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
 
-// Handle Ad Click
-const handleAdClick = (adId) => {
-  if (!isSidebarVisible) {
-    // Only navigate to ad details if sidebar is not visible
-    router.push(`/AdView/${adId}`);
-  }
-};
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isSidebarVisible]);
+
+  // Handle Ad Click
+  const handleAdClick = (adId) => {
+    if (!isSidebarVisible) {
+      // Only navigate to ad details if sidebar is not visible
+      router.push(`/AdView/${adId}`);
+    }
+  };
 
   return (
     <>
@@ -336,7 +348,10 @@ const handleAdClick = (adId) => {
               <select
                 className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                 value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value)}
+                onChange={(e) => {
+                  setSelectedLocation(e.target.value);
+                  setSelectedSectors([]); // Reset sectors when location changes
+                }}
               >
                 <option value="">All Locations</option>
                 <option>Punjab, Pakistan</option>
@@ -348,6 +363,93 @@ const handleAdClick = (adId) => {
                 <option>Northern Areas, Pakistan</option>
               </select>
             </div>
+
+{/* Sector Filter */}
+{selectedLocation && locationSectors[selectedLocation] && (
+  <div className="space-y-4">
+    <label className="block text-sm font-medium text-gray-700">
+      Sector
+    </label>
+    <div className="relative">
+      <select
+        className="w-full px-4 py-3 pr-10 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all appearance-none"
+        value={selectedSectors}
+        onChange={(e) =>
+          setSelectedSectors(
+            Array.from(
+              e.target.selectedOptions,
+              (option) => option.value
+            )
+          )
+        }
+        multiple // Allow multiple selections
+      >
+        {locationSectors[selectedLocation].map((sector, index) => (
+          <option
+            key={index}
+            value={sector}
+            className="text-sm text-gray-700 hover:bg-purple-50"
+          >
+            {sector}
+          </option>
+        ))}
+      </select>
+      {/* Dropdown Arrow */}
+      <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+        <svg
+          className="w-5 h-5 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </div>
+    </div>
+    {/* Selected Sectors Display */}
+    {selectedSectors.length > 0 && (
+      <div className="flex flex-wrap gap-2 mt-2">
+        {selectedSectors.map((sector, index) => (
+          <div
+            key={index}
+            className="flex items-center px-3 py-1 text-sm text-purple-700 bg-purple-50 rounded-full"
+          >
+            {sector}
+            <button
+              onClick={() =>
+                setSelectedSectors(
+                  selectedSectors.filter((s) => s !== sector)
+                )
+              }
+              className="ml-2 text-purple-500 hover:text-purple-700"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
 
             {/* Price Range Filter */}
             <div>

@@ -4,22 +4,42 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/Navbar";
 import { supabase } from "../supabase";
-import { v4 as uuidv4 } from "uuid"; // Import the UUID library
+import { v4 as uuidv4 } from "uuid";
 import Footer from "../components/Footer";
+
+// Define sectors for each location
+const locationSectors = {
+  "Islamabad Capital Territory, Pakistan": [
+    "Sector F-5",
+    "Sector G-6",
+    "Sector H-8",
+    "Sector I-9",
+    "Sector D-12",
+    "Other",
+  ],
+  "Azad Kashmir, Pakistan": ["Muzaffarabad", "Mirpur", "Rawalakot", "Other"],
+  "Balochistan, Pakistan": ["Quetta", "Gwadar", "Khuzdar", "Other"],
+  "Khyber Pakhtunkhwa, Pakistan": ["Peshawar", "Abbottabad", "Mardan", "Other"],
+  "Northern Areas, Pakistan": ["Gilgit", "Skardu", "Hunza", "Other"],
+  "Punjab, Pakistan": ["Lahore", "Faisalabad", "Rawalpindi", "Other"],
+  "Sindh, Pakistan": ["Karachi", "Hyderabad", "Sukkur", "Other"],
+};
 
 export default function AdPost() {
   const [images, setImages] = useState([]);
   const [brand, setBrand] = useState("");
   const [location, setLocation] = useState("");
+  const [sectors, setSectors] = useState([]); // New state for sectors
+  const [selectedSector, setSelectedSector] = useState(""); // New state for selected sector
   const [adTitle, setAdTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [isDeliverable, setIsDeliverable] = useState(false);
-  const [sold, setSold] = useState(null); // Optional, can be updated later
+  const [sold, setSold] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [condition, setCondition] = useState(""); // Add this with other state variables
+  const [condition, setCondition] = useState("");
 
   const router = useRouter();
 
@@ -28,12 +48,18 @@ export default function AdPost() {
     setImages(uploadedFiles);
   };
 
+  const handleLocationChange = (e) => {
+    const selectedLocation = e.target.value;
+    setLocation(selectedLocation);
+    setSectors(locationSectors[selectedLocation] || []);
+    setSelectedSector(""); // Reset selected sector when location changes
+  };
+
   const handlePostAd = async () => {
     try {
-      setLoading(true); // Start loader
+      setLoading(true);
       console.log("Starting ad posting process...");
 
-      // User session retrieval
       const { data: session, error: sessionError } =
         await supabase.auth.getSession();
       if (sessionError) {
@@ -50,7 +76,6 @@ export default function AdPost() {
       const ad_id = Date.now();
       console.log(`Generated Ad ID: ${ad_id}, User ID: ${user_id}`);
 
-      // Prediction API function with enhanced logging
       const predictImage = async (image) => {
         console.log(`Sending image to prediction API: ${image.name}`);
 
@@ -84,17 +109,14 @@ export default function AdPost() {
         }
       };
 
-      // Process images with prediction and logging
       const processedImages = await Promise.all(
         images.map(async (image) => {
           try {
-            // Predict image
             const prediction = await predictImage(image);
             console.log(`Prediction for ${image.name}: 
             Label: ${prediction.predictedLabel}, 
             Confidence: ${prediction.confidence}`);
 
-            // Upload image to Supabase storage
             const fileName = `${Date.now()}-${image.name}`;
             const { data, error } = await supabase.storage
               .from("ads-images")
@@ -108,13 +130,9 @@ export default function AdPost() {
               throw error;
             }
 
-            // Generate public URL
             const { data: publicUrlData } = supabase.storage
               .from("ads-images")
               .getPublicUrl(fileName);
-            // console.log(
-            //   `Image uploaded. Public URL: ${publicUrlData.publicUrl}`
-            // );
 
             return {
               url: publicUrlData.publicUrl,
@@ -127,7 +145,6 @@ export default function AdPost() {
         })
       );
 
-      // Detailed logging for image classification
       const validImages = processedImages.filter(
         (img) =>
           img.prediction.predictedLabel === "Smartphone" &&
@@ -140,10 +157,6 @@ export default function AdPost() {
           parseFloat(img.prediction.confidence) <= 60
       );
 
-      // console.log(`Valid Images Count: ${validImages.length}`);
-      // console.log(`Invalid Images Count: ${invalidImages.length}`);
-
-      // Insert valid images
       if (validImages.length > 0) {
         const { error: insertError } = await supabase.from("user_ads").insert({
           ad_id,
@@ -159,6 +172,7 @@ export default function AdPost() {
           is_deliverable: isDeliverable,
           condition,
           sold: sold,
+          sector: selectedSector, // Add selected sector
         });
 
         if (insertError) {
@@ -166,12 +180,9 @@ export default function AdPost() {
           throw insertError;
         }
 
-        // console.log("Ad successfully posted in user_ads");
         alert("Ad posted successfully!");
-        // resetForm();
       }
 
-      // Insert rejected images
       if (invalidImages.length > 0) {
         const { error: rejectedError } = await supabase
           .from("rejected_user_ads")
@@ -193,6 +204,7 @@ export default function AdPost() {
                   `${img.prediction.predictedLabel} (${img.prediction.confidence})`
               )
               .join(", "),
+            sector: selectedSector, // Add selected sector
           });
 
         if (rejectedError) {
@@ -200,17 +212,12 @@ export default function AdPost() {
           throw rejectedError;
         }
 
-        // console.log("Rejected images inserted into rejected_user_ads");
-
         if (validImages.length === 0) {
-          console.warn("No valid smartphone images found");
           alert(
             "Ad could not be posted. Images do not meet smartphone criteria."
           );
         }
       }
-
-      // console.log("Ad posting process completed successfully");
     } catch (error) {
       console.error("Comprehensive Error in handlePostAd:", error);
       console.error("Error Details:", {
@@ -232,13 +239,15 @@ export default function AdPost() {
     setImages([]);
     setBrand("");
     setLocation("");
+    setSectors([]);
+    setSelectedSector("");
     setAdTitle("");
     setDescription("");
     setPrice("");
     setName("");
     setPhone("");
     setIsDeliverable(false);
-    setCondition(""); // For the new condition field
+    setCondition("");
     setSold(null);
   };
 
@@ -512,7 +521,7 @@ export default function AdPost() {
             <label className="block mb-2 font-semibold">Location*</label>
             <select
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={handleLocationChange}
               className="block w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="" disabled>
@@ -537,6 +546,27 @@ export default function AdPost() {
               <option value="Sindh, Pakistan">Sindh, Pakistan</option>
             </select>
           </div>
+
+          {/* Sector */}
+          {sectors.length > 0 && (
+            <div>
+              <label className="block mb-2 font-semibold">Sector*</label>
+              <select
+                value={selectedSector}
+                onChange={(e) => setSelectedSector(e.target.value)}
+                className="block w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" disabled>
+                  Select sector
+                </option>
+                {sectors.map((sector, index) => (
+                  <option key={index} value={sector}>
+                    {sector}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Price */}
           <div>
@@ -575,8 +605,6 @@ export default function AdPost() {
               placeholder="Enter phone number"
             />
           </div>
-
-          {/* condition section  */}
 
           {/* Condition */}
           <div>
@@ -637,7 +665,6 @@ export default function AdPost() {
           </div>
 
           {/* Submit Button */}
-
           <button
             type="button"
             onClick={handlePostAd}
