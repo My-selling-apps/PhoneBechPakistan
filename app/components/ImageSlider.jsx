@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 
 export default function ImageSlider({buttonTxt}) {
   const images = [
-    '/s1.jpg',
-    '/s2.jpg',
-    '/s3.jpg',
-    '/s4.jpg',
+    '/slider1.jpeg',
+    '/slider1.jpeg',
+    '/slider1.jpeg',
+    '/slider1.jpeg',
    
   ];
 
