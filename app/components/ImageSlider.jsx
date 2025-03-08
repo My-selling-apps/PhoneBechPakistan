@@ -33,7 +33,7 @@ export default function ImageSlider({buttonTxt}) {
               <img
                 src={image}
                 alt={`Slider image ${index + 1}`}
-                className="w-full ms:h-[173px] md:h-[508px] md:object-cover object-fit"
+                className="w-full ms:h-[173px] md:h-[508px] md:object-fit object-fit"
               />
             </div>
           ))}
