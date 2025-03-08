@@ -13,11 +13,11 @@ const AdsComponent = () => {
           .order('created_at', { ascending: false });
 
         if (adsError) {
-          console.error('Error fetching featured ads:', adsError);
+          // console.error('Error fetching featured ads:', adsError);
           return;
         }
 
-        console.log('Fetched Featured Ads:', adsData);
+        // console.log('Fetched Featured Ads:', adsData);
 
         const processedAds = await Promise.all(
           adsData.map(async (ad) => {
@@ -35,7 +35,7 @@ const AdsComponent = () => {
                   imageUrl = parsedImages;
                 }
               } catch (error) {
-                console.error('Error parsing images:', error);
+                // console.error('Error parsing images:', error);
                 imageUrl = ad.images;
               }
             }
@@ -44,10 +44,10 @@ const AdsComponent = () => {
           })
         );
 
-        console.log('Processed Featured Ads with Image URLs:', processedAds);
+        // console.log('Processed Featured Ads with Image URLs:', processedAds);
         setAds(processedAds);
       } catch (err) {
-        console.error('Error processing featured ads:', err);
+        // console.error('Error processing featured ads:', err);
       }
     };
 

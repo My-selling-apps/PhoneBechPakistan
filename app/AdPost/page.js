@@ -112,9 +112,9 @@ export default function AdPost() {
             const { data: publicUrlData } = supabase.storage
               .from("ads-images")
               .getPublicUrl(fileName);
-            console.log(
-              `Image uploaded. Public URL: ${publicUrlData.publicUrl}`
-            );
+            // console.log(
+            //   `Image uploaded. Public URL: ${publicUrlData.publicUrl}`
+            // );
 
             return {
               url: publicUrlData.publicUrl,
@@ -140,8 +140,8 @@ export default function AdPost() {
           parseFloat(img.prediction.confidence) <= 60
       );
 
-      console.log(`Valid Images Count: ${validImages.length}`);
-      console.log(`Invalid Images Count: ${invalidImages.length}`);
+      // console.log(`Valid Images Count: ${validImages.length}`);
+      // console.log(`Invalid Images Count: ${invalidImages.length}`);
 
       // Insert valid images
       if (validImages.length > 0) {
@@ -166,7 +166,7 @@ export default function AdPost() {
           throw insertError;
         }
 
-        console.log("Ad successfully posted in user_ads");
+        // console.log("Ad successfully posted in user_ads");
         alert("Ad posted successfully!");
         // resetForm();
       }
@@ -200,7 +200,7 @@ export default function AdPost() {
           throw rejectedError;
         }
 
-        console.log("Rejected images inserted into rejected_user_ads");
+        // console.log("Rejected images inserted into rejected_user_ads");
 
         if (validImages.length === 0) {
           console.warn("No valid smartphone images found");
@@ -210,7 +210,7 @@ export default function AdPost() {
         }
       }
 
-      console.log("Ad posting process completed successfully");
+      // console.log("Ad posting process completed successfully");
     } catch (error) {
       console.error("Comprehensive Error in handlePostAd:", error);
       console.error("Error Details:", {

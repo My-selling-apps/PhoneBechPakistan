@@ -58,7 +58,7 @@ const LoginPage = () => {
         showPopup("Your email is not verified. Please verify your email first.");
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     } finally {
       setLoading(false);
     }
@@ -73,10 +73,10 @@ const LoginPage = () => {
 
       if (error) {
         console.error("Google login error:", error);
-        throw error;
+        // throw error;
       }
     } catch (error) {
-      console.error(error.message);
+      // console.error(error.message);
     }
   };
 

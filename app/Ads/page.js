@@ -56,7 +56,7 @@ const AdsPage = () => {
             : [],
         }));
 
-        console.log("Fetched Ads:", processedAds); // Debugging
+        // console.log("Fetched Ads:", processedAds); // Debugging
         setAds(processedAds);
 
         // Add 2 second delay after successful fetch
@@ -72,20 +72,22 @@ const AdsPage = () => {
     fetchAds();
   }, []);
 
-  // Update Visible Ads when filters are reset
-  useEffect(() => {
-    const filteredAds = filterAds(ads);
-    const startIndex = 0;
-    const endIndex = currentPage * 12;
-    setVisibleAds(filteredAds.slice(startIndex, endIndex));
-  }, [
-    ads,
-    currentPage,
-    selectedLocation,
-    selectedBrands,
-    selectedConditions,
-    priceRange,
-  ]);
+
+// Single, consolidated useEffect for updating visible ads
+useEffect(() => {
+  const filteredAds = filterAds(ads);
+  const adsToShow = filteredAds.slice(0, currentPage * 12);
+  // console.log(`Showing ${adsToShow.length} ads out of ${filteredAds.length} filtered ads (page ${currentPage})`);
+  setVisibleAds(adsToShow);
+}, [
+  ads,
+  currentPage,
+  selectedLocation,
+  selectedBrands,
+  selectedConditions,
+  priceRange,
+  searchQuery,
+]);
 
   useEffect(() => {
 
@@ -132,22 +134,7 @@ const AdsPage = () => {
     });
   };
 
-  // Update Visible Ads
-  useEffect(() => {
-    const filteredAds = filterAds(ads);
-    // console.log("Visible Ads:", filteredAds.slice(0, currentPage * 12)); // Debugging
-    const startIndex = 0;
-    const endIndex = currentPage * 12;
-    setVisibleAds(filteredAds.slice(startIndex, endIndex));
-  }, [
-    ads,
-    currentPage,
-    selectedLocation,
-    selectedBrands,
-    selectedConditions,
-    priceRange,
-    searchQuery, // Add searchQuery to dependencies
-  ]);
+
 
   // Handle Click Outside Sidebar
   useEffect(() => {
@@ -234,15 +221,16 @@ const AdsPage = () => {
   };
 
   // Reset Filters Function
-  const resetFilters = () => {
-    setSelectedLocation("");
-    setSelectedBrands([]);
-    setSelectedConditions([]);
-    setPriceRange([250, 1000000]); // Reset to default price range
-    setCurrentPage(1); // Reset to the first page
-    setSearchQuery(""); // Reset search query
-    router.push("/Ads"); // Clear URL search params
-  };
+
+const resetFilters = () => {
+  setSelectedLocation("");
+  setSelectedBrands([]);
+  setSelectedConditions([]);
+  setPriceRange([250, 1000000]); // Reset to default price range
+  setCurrentPage(1); // Reset to the first page
+  setSearchQuery(""); // Reset search query
+  router.push("/Ads"); // Clear URL search params
+};
 
   // // Add this function inside your AdsPage component
   // const handleAdClick = (adId) => {

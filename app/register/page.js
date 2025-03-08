@@ -142,7 +142,7 @@ const Page = () => {
         });
 
       if (signInError) {
-        console.error("Sign-In Error:", signInError);
+        // console.error("Sign-In Error:", signInError);
         showModal("Google sign-in failed");
         return;
       }
@@ -162,7 +162,7 @@ const Page = () => {
 
       if (!user) {
         showModal("Failed to authenticate user after Google Sign-In.");
-        console.error("User fetch after sign-in timed out.");
+        // console.error("User fetch after sign-in timed out.");
         return;
       }
 
@@ -176,7 +176,7 @@ const Page = () => {
         });
 
       if (insertError) {
-        console.error("Data Insertion Error:", insertError);
+        // console.error("Data Insertion Error:", insertError);
         showModal("Failed to save user data.");
         return;
       }
@@ -184,7 +184,7 @@ const Page = () => {
       showModal("Sign-in successful.");
       router.push("/Ads");
     } catch (error) {
-      console.error("An unexpected error occurred during sign-in:", error);
+      // console.error("An unexpected error occurred during sign-in:", error);
       showModal("An unexpected error occurred. Please try again.");
     }
   };
