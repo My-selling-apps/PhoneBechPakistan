@@ -164,7 +164,7 @@ const AdViewPage = () => {
       </div>
       <div className="flex flex-col min-h-screen font-sans bg-gray-50 border-r mt-10">
         <div className="p-4 mx-auto max-w-7xl flex-grow">
-          <div className="bg-white grid grid-cols-1 lg:grid-cols-5 gap-12 shadow-lg rounded-xl border-l-4 border-purple-600 hover:shadow-xl transition-shadow duration-300">
+          <div className="bg-white grid grid-cols-1 lg:grid-cols-5 gap-12 shadow-lg rounded-xl  border-purple-600 hover:shadow-xl transition-shadow duration-300">
             {/* Images Section */}
             <div className="lg:col-span-3 text-center">
               <div 
@@ -198,7 +198,7 @@ const AdViewPage = () => {
                 <img
                   src={ad.images[selectedImageIndex]}
                   alt={`${ad.ad_title} - Image ${selectedImageIndex + 1}`}
-                  className="w-4/5 aspect-[251/171] rounded-lg object-contain mx-auto"
+                  className="w-[100%] aspect-[251/171] rounded-lg object-contain mx-auto"
                 />
 
                 {/* Favorite Button */}
@@ -215,11 +215,11 @@ const AdViewPage = () => {
               </div>
 
               {/* Thumbnail Navigation */}
-              <div className="mt-6 flex  justify-center gap-4 mx-auto">
+              <div className="mt-6 flex   justify-center gap-4 mx-auto">
                 {ad.images.map((image, imageIndex) => (
                   <div
                     key={imageIndex}
-                    className={`w-20 h-16 sm:w-24 sm:h-20 flex items-center justify-center rounded-lg p-2 
+                    className={`w-20 h-16 sm:w-20 sm:h-20 flex items-cover justify-center rounded-lg p-2 
                       ${
                         selectedImageIndex === imageIndex
                           ? "ring-2 ring-purple-600 shadow-lg bg-purple-50"
