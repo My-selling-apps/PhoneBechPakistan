@@ -5,8 +5,8 @@ export default function ImageSlider({buttonTxt}) {
   const images = [
     '/slider1.jpeg',
     '/slider1.jpeg',
-    '/slider1.jpeg',
-    '/slider1.jpeg',
+    '/slider2.jpeg',
+    '/slider2.jpeg',
    
   ];
 
@@ -21,7 +21,7 @@ export default function ImageSlider({buttonTxt}) {
 
   return (
     <>
-      <div className="relative w-full h-[164px] md:h-[500px] top-10 overflow-hidden">
+      <div className="relative w-full h-[204px] md:h-[500px] top-10 overflow-hidden">
         <div
           className="flex transition-transform duration-700 ease-in-out"
           style={{
