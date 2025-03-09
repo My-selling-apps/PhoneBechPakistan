@@ -32,6 +32,7 @@ export default function AdPost() {
   const [location, setLocation] = useState("");
   const [sectors, setSectors] = useState([]); // New state for sectors
   const [selectedSector, setSelectedSector] = useState(""); // New state for selected sector
+  const [area, setArea] = useState(""); // New state for area
   const [adTitle, setAdTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -54,6 +55,7 @@ export default function AdPost() {
     setLocation(selectedLocation);
     setSectors(locationSectors[selectedLocation] || []);
     setSelectedSector(""); // Reset selected sector when location changes
+    setArea(""); // Reset area when location changes
   };
 
   const handlePostAd = async () => {
@@ -174,6 +176,7 @@ export default function AdPost() {
           condition,
           sold: sold,
           sector: selectedSector, // Add selected sector
+          area: area, // Add area
         });
 
         if (insertError) {
@@ -206,6 +209,7 @@ export default function AdPost() {
               )
               .join(", "),
             sector: selectedSector, // Add selected sector
+            area: area, // Add area
           });
 
         if (rejectedError) {
@@ -244,6 +248,7 @@ export default function AdPost() {
     setLocation("");
     setSectors([]);
     setSelectedSector("");
+    setArea("");
     setAdTitle("");
     setDescription("");
     setPrice("");
@@ -568,6 +573,20 @@ export default function AdPost() {
                   </option>
                 ))}
               </select>
+            </div>
+          )}
+
+          {/* Area */}
+          {selectedSector && (
+            <div>
+              <label className="block mb-2 font-semibold">Area (Optional)</label>
+              <input
+                type="text"
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+                className="block w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter area"
+              />
             </div>
           )}
 

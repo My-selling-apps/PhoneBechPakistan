@@ -9,7 +9,8 @@ const VideoCardComponent = () => {
     "https://gijarsxlfavlufecgjiw.supabase.co/storage/v1/object/public/ads-images/snap1.mp4?t=2025-01-25T21%3A28%3A33.335Z",
     "https://gijarsxlfavlufecgjiw.supabase.co/storage/v1/object/public/ads-images/snap2.mp4",
     "https://gijarsxlfavlufecgjiw.supabase.co/storage/v1/object/public/ads-images/snap3.mp4",
-    "https://gijarsxlfavlufecgjiw.supabase.co/storage/v1/object/public/ads-images/snap4.mp4",
+    "https://gijarsxlfavlufecgjiw.supabase.co/storage/v1/object/public/ads-images/snap3.mp4",
+
   ];
 
   const handleVideoClick = (video) => {

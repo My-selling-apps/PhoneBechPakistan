@@ -46,6 +46,7 @@ const AdsPage = () => {
   const [selectedConditions, setSelectedConditions] = useState([]);
   const [selectedSectors, setSelectedSectors] = useState([]); // New state for sectors
   const [priceRange, setPriceRange] = useState([250, 1000000]); // Min and Max Price
+  const [area, setArea] = useState(""); // New state for area
 
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
@@ -104,6 +105,7 @@ const AdsPage = () => {
     selectedSectors, // Include selectedSectors in dependency array
     priceRange,
     searchQuery,
+    area, // Include area in dependency array
   ]);
 
   // Filter Ads Function
@@ -143,6 +145,11 @@ const AdsPage = () => {
         selectedSectors.length > 0 &&
         !selectedSectors.includes(ad.sector)
       ) {
+        return false;
+      }
+
+      // Filter by Area
+      if (area && !ad.area?.toLowerCase().includes(area.toLowerCase())) {
         return false;
       }
 
@@ -248,6 +255,7 @@ const AdsPage = () => {
     setPriceRange([250, 1000000]); // Reset to default price range
     setCurrentPage(1); // Reset to the first page
     setSearchQuery(""); // Reset search query
+    setArea(""); // Reset area
     router.push("/Ads"); // Clear URL search params
   };
 
@@ -364,92 +372,108 @@ const AdsPage = () => {
               </select>
             </div>
 
-{/* Sector Filter */}
-{selectedLocation && locationSectors[selectedLocation] && (
-  <div className="space-y-4">
-    <label className="block text-sm font-medium text-gray-700">
-      Sector
-    </label>
-    <div className="relative">
-      <select
-        className="w-full px-4 py-3 pr-10 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all appearance-none"
-        value={selectedSectors}
-        onChange={(e) =>
-          setSelectedSectors(
-            Array.from(
-              e.target.selectedOptions,
-              (option) => option.value
-            )
-          )
-        }
-        multiple // Allow multiple selections
-      >
-        {locationSectors[selectedLocation].map((sector, index) => (
-          <option
-            key={index}
-            value={sector}
-            className="text-sm text-gray-700 hover:bg-purple-50"
-          >
-            {sector}
-          </option>
-        ))}
-      </select>
-      {/* Dropdown Arrow */}
-      <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-        <svg
-          className="w-5 h-5 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </div>
-    </div>
-    {/* Selected Sectors Display */}
-    {selectedSectors.length > 0 && (
-      <div className="flex flex-wrap gap-2 mt-2">
-        {selectedSectors.map((sector, index) => (
-          <div
-            key={index}
-            className="flex items-center px-3 py-1 text-sm text-purple-700 bg-purple-50 rounded-full"
-          >
-            {sector}
-            <button
-              onClick={() =>
-                setSelectedSectors(
-                  selectedSectors.filter((s) => s !== sector)
-                )
-              }
-              className="ml-2 text-purple-500 hover:text-purple-700"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
+            {/* Sector Filter */}
+            {selectedLocation && locationSectors[selectedLocation] && (
+              <div className="space-y-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Sector
+                </label>
+                <div className="relative">
+                  <select
+                    className="w-full px-4 py-3 pr-10 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all appearance-none"
+                    value={selectedSectors}
+                    onChange={(e) =>
+                      setSelectedSectors(
+                        Array.from(
+                          e.target.selectedOptions,
+                          (option) => option.value
+                        )
+                      )
+                    }
+                    multiple // Allow multiple selections
+                  >
+                    {locationSectors[selectedLocation].map((sector, index) => (
+                      <option
+                        key={index}
+                        value={sector}
+                        className="text-sm text-gray-700 hover:bg-purple-50"
+                      >
+                        {sector}
+                      </option>
+                    ))}
+                  </select>
+                  {/* Dropdown Arrow */}
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                {/* Selected Sectors Display */}
+                {selectedSectors.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {selectedSectors.map((sector, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center px-3 py-1 text-sm text-purple-700 bg-purple-50 rounded-full"
+                      >
+                        {sector}
+                        <button
+                          onClick={() =>
+                            setSelectedSectors(
+                              selectedSectors.filter((s) => s !== sector)
+                            )
+                          }
+                          className="ml-2 text-purple-500 hover:text-purple-700"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Area Filter */}
+            {selectedSectors.length > 0 && (
+              <div className="space-y-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Area (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                  className="w-full px-4 py-3 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                  placeholder="Enter area"
                 />
-              </svg>
-            </button>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-)}
+              </div>
+            )}
 
             {/* Price Range Filter */}
             <div>
