@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { supabase } from "../supabase"; // Import Supabase client
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Page = () => {
   const router = useRouter();
@@ -32,13 +34,13 @@ const Page = () => {
     const { email, password, confirmPassword, phoneNumber } = formData;
 
     if (!email || !password || !confirmPassword || !phoneNumber) {
-      showModal("Please fill in all fields.");
+      toast("Please fill in all fields.");
       setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
-      showModal("Passwords do not match.");
+      toast("Passwords do not match.");
       setLoading(false);
       return;
     }
@@ -64,12 +66,12 @@ const Page = () => {
 
       if (response.ok) {
         setShowOtpField(true);
-        showModal("OTP sent to your email. Please check your inbox.");
+        toast("OTP sent to your email. Please check your inbox.");
       } else {
-        showModal(result.error || "Failed to send OTP. Please try again.");
+        toast(result.error || "Failed to send OTP. Please try again.");
       }
     } catch (error) {
-      showModal("An error occurred. Please try again.");
+      toast("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -85,7 +87,7 @@ const Page = () => {
         .single();
 
       if (tempUserError || !tempUserData) {
-        showModal("Registration session expired. Please register again.");
+        toast("Registration session expired. Please register again.");
         setShowOtpField(false); // Go back to registration form
         return;
       }
@@ -100,12 +102,12 @@ const Page = () => {
         .single();
 
       if (otpError || !otpData) {
-        showModal("OTP verification failed. Please try again.");
+        toast("OTP verification failed. Please try again.");
         return;
       }
 
       if (otpData.otp !== otp) {
-        showModal("Incorrect OTP. Please try again.");
+        toast("Incorrect OTP. Please try again.");
         return;
       }
 
@@ -116,7 +118,7 @@ const Page = () => {
       });
 
       if (signUpError) {
-        showModal("Failed to register user. Please try again.");
+        toast("Failed to register user. Please try again.");
         return;
       }
 
@@ -127,10 +129,10 @@ const Page = () => {
       ]);
 
       // Step 5: Success and redirect
-      showModal("Registration successful! Redirecting...");
+      toast("Registration successful! Redirecting...");
       setTimeout(() => router.push("/Ads"), 2000);
     } catch (error) {
-      showModal("An error occurred. Please try again.");
+      toast("An error occurred. Please try again.");
     }
   };
 
@@ -143,7 +145,7 @@ const Page = () => {
 
       if (signInError) {
         // console.error("Sign-In Error:", signInError);
-        showModal("Google sign-in failed");
+        toast("Google sign-in failed");
         return;
       }
 
@@ -161,7 +163,7 @@ const Page = () => {
       }
 
       if (!user) {
-        showModal("Failed to authenticate user after Google Sign-In.");
+        toast("Failed to authenticate user after Google Sign-In.");
         // console.error("User fetch after sign-in timed out.");
         return;
       }
@@ -177,24 +179,24 @@ const Page = () => {
 
       if (insertError) {
         // console.error("Data Insertion Error:", insertError);
-        showModal("Failed to save user data.");
+        toast("Failed to save user data.");
         return;
       }
 
-      showModal("Sign-in successful.");
+      toast("Sign-in successful.");
       router.push("/Ads");
     } catch (error) {
       // console.error("An unexpected error occurred during sign-in:", error);
-      showModal("An unexpected error occurred. Please try again.");
+      toast("An unexpected error occurred. Please try again.");
     }
   };
 
-  const showModal = (message) => {
-    setModal({ open: true, message });
-    setTimeout(() => {
-      setModal({ open: false, message: "" });
-    }, 3000);
-  };
+  // const toast = (message) => {
+  //   setModal({ open: true, message });
+  //   setTimeout(() => {
+  //     setModal({ open: false, message: "" });
+  //   }, 3000);
+  // };
 
   return (
     <>
@@ -421,6 +423,8 @@ const Page = () => {
           </div>
         </div>
       </div>
+          {/* Add this line */}
+    <ToastContainer />
     </>
   );
 };

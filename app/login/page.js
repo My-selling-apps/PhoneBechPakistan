@@ -4,6 +4,8 @@ import React, { useState, Suspense } from "react";
 import { supabase } from "../supabase";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -36,7 +38,7 @@ const LoginPage = () => {
     const { email, password } = formData;
 
     if (!email || !password) {
-      showPopup("Please fill in all fields.");
+      toast("Please fill in all fields.");
       setLoading(false);
       return;
     }
@@ -48,14 +50,14 @@ const LoginPage = () => {
       });
 
       if (error) {
-        showPopup("Invalid credentials. Please try again.");
+        toast("Invalid credentials. Please try again.");
         throw error;
       }
 
       if (data.session) {
         router.push("/Ads");
       } else {
-        showPopup("Your email is not verified. Please verify your email first.");
+        toast("Your email is not verified. Please verify your email first.");
       }
     } catch (error) {
       // console.error(error);
@@ -72,7 +74,7 @@ const LoginPage = () => {
       });
 
       if (error) {
-        console.error("Google login error:", error);
+        // console.error("Google login error:", error);
         // throw error;
       }
     } catch (error) {
@@ -88,7 +90,7 @@ const LoginPage = () => {
     const { email } = formData;
 
     if (!email) {
-      showPopup("Please enter your email address.");
+      toast("Please enter your email address.");
       setLoading(false);
       return;
     }
@@ -100,10 +102,10 @@ const LoginPage = () => {
 
       if (error) throw error;
 
-      showPopup("Password reset link has been sent to your email.");
+      toast("Password reset link has been sent to your email.");
       setFormMode('login');
     } catch (error) {
-      showPopup(error.message || "An error occurred. Please try again.");
+      toast(error.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -117,7 +119,7 @@ const LoginPage = () => {
     const { newPassword, confirmPassword } = formData;
 
     if (newPassword !== confirmPassword) {
-      showPopup("Passwords do not match.");
+      toast("Passwords do not match.");
       setLoading(false);
       return;
     }
@@ -129,21 +131,21 @@ const LoginPage = () => {
 
       if (error) throw error;
 
-      showPopup("Password has been successfully reset. Please login with your new password.");
+      toast("Password has been successfully reset. Please login with your new password.");
       setFormMode('login');
     } catch (error) {
-      showPopup(error.message || "An error occurred. Please try again.");
+      toast(error.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const showPopup = (message) => {
-    setPopup({ open: true, message });
-    setTimeout(() => {
-      setPopup({ open: false, message: "" });
-    }, 3000);
-  };
+  // const showPopup = (message) => {
+  //   setPopup({ open: true, message });
+  //   setTimeout(() => {
+  //     setPopup({ open: false, message: "" });
+  //   }, 3000);
+  // };
 
   // Check for reset password mode on component mount
   React.useEffect(() => {
@@ -509,6 +511,8 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
+       {/* Add this line */}
+       <ToastContainer />
     </>
   );
 };
