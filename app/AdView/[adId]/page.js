@@ -169,7 +169,7 @@ const AdViewPage = () => {
             {/* Images Section */}
             <div className="lg:col-span-3 text-center">
               <div 
-                className="px-4 py-10 rounded-lg bg-gray-50 shadow-inner relative"
+                className=" rounded-lg bg-gray-50 shadow-inner relative"
                 onTouchStart={onTouchStart}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
@@ -199,7 +199,7 @@ const AdViewPage = () => {
                 <img
                   src={ad.images[selectedImageIndex]}
                   alt={`${ad.ad_title} - Image ${selectedImageIndex + 1}`}
-                  className="w-[100%] aspect-[251/171] rounded-lg object-contain mx-auto"
+                  className="w-[100%] aspect-[72/97] md:aspect-[251/171] rounded-lg object-contain mx-auto"
                 />
 
                 {/* Favorite Button */}
