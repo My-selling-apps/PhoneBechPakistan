@@ -635,13 +635,13 @@ const AdsPage = () => {
               <div className={`bg-gray-50 overflow-hidden flex items-center justify-center
   ${isListView 
     ? 'w-full sm:w-60 h-48 sm:h-60 flex-shrink-0' 
-    : 'mx-auto rounded-b-2xl aspect-[281/218]'}`}>
+    : 'mx-auto rounded-b-2xl md:aspect-[281/218] aspect-[240/313]'}`}>
   <img
     src={ad.images[0] || "https://via.placeholder.com/281x218"}
     alt={ad.ad_title}
     className={`${isListView 
-      ? 'w-full h-full object-contain' 
-      : 'w-full h-full object-contain'}`}
+      ? 'w-full h-full object-cover' 
+      : 'w-full h-full object-cover'}`}
   />
 </div>
 
