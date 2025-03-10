@@ -558,14 +558,14 @@ export default function AdPost() {
           {/* Sector */}
           {sectors.length > 0 && (
             <div>
-              <label className="block mb-2 font-semibold">Sector*</label>
+              <label className="block mb-2 font-semibold">City*</label>
               <select
                 value={selectedSector}
                 onChange={(e) => setSelectedSector(e.target.value)}
                 className="block w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="" disabled>
-                  Select sector
+                  Select City
                 </option>
                 {sectors.map((sector, index) => (
                   <option key={index} value={sector}>
