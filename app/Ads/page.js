@@ -148,8 +148,11 @@ const AdsPage = () => {
         return false;
       }
 
-      // Filter by Area
-      if (area && !ad.area?.toLowerCase().includes(area.toLowerCase())) {
+      // Filter by Area (Case-Insensitive)
+      if (
+        area &&
+        !ad.area?.toLowerCase().includes(area.toLowerCase())
+      ) {
         return false;
       }
 
