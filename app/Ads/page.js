@@ -379,7 +379,7 @@ const AdsPage = () => {
             {selectedLocation && locationSectors[selectedLocation] && (
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Sector
+                  City
                 </label>
                 <div className="relative">
                   <select
