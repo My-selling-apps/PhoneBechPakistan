@@ -3,10 +3,15 @@ import { useState, useEffect } from 'react';
 
 export default function ImageSlider({buttonTxt}) {
   const images = [
-    '/slider3.jpeg',
-    '/slider3.jpeg',
-    '/slider3.jpeg',
-    '/slider3.jpeg',
+    '/phonebechpk/Phonebechpk-1.jpg',
+    '/phonebechpk/Phonebechpk-2.jpg',
+    // '/phonebechpk/Phonebechpk-3.jpg',
+    '/phonebechpk/Phonebechpk-4.jpg',
+    '/phonebechpk/Phonebechpk-5.jpg',
+    '/phonebechpk/Phonebechpk-6.jpg',
+    '/phonebechpk/Phonebechpk-7.jpg',
+    '/phonebechpk/Phonebechpk-8.jpg',
+    
    
   ];
 
@@ -21,7 +26,7 @@ export default function ImageSlider({buttonTxt}) {
 
   return (
     <>
-      <div className="relative w-full h-[155px] md:h-[500px] top-10 overflow-hidden">
+      <div className="relative w-full h-[135px] md:h-[500px] top-10 overflow-hidden">
         <div
           className="flex transition-transform duration-700 ease-in-out"
           style={{

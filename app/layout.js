@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <Head>
         {/* Favicon for .ico format */}
-        <link rel="icon" href="/phoneBech-Fav.ico" type="image/x-icon" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </Head>
       
       <body
