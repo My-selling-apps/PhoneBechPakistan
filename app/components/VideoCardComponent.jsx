@@ -39,7 +39,7 @@ const VideoCardComponent = () => {
               loop
               muted
               playsInline
-              className="w-full h-full object-contain"
+              className="w-full h-full object-fill"
             />
           </div>
         ))}
