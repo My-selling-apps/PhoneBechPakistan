@@ -123,15 +123,29 @@ const AdViewPage = () => {
     setIsFavorite(!isFavorite);
   };
 
-  const handleContactSeller = () => {
-    if (ad?.phone) {
-      const formattedPhone = ad.phone.replace(/\D/g, '');
-      const whatsappUrl = `https://wa.me/${formattedPhone}?text=Hi, I'm interested in your ad: ${ad.ad_title}`;
-      window.open(whatsappUrl, '_blank');
-    } else {
-      alert('Contact number not available');
+const handleContactSeller = () => {
+  if (ad?.phone) {
+    // Remove all non-digit characters from the phone number
+    let formattedPhone = ad.phone.replace(/\D/g, ''); // Use `let` instead of `const`
+
+    // Check if the phone number already starts with +92 or 92
+    if (!formattedPhone.startsWith('+92') && !formattedPhone.startsWith('92')) {
+      // Prepend +92 to the phone number
+      formattedPhone = '+92' + formattedPhone;
+    } else if (formattedPhone.startsWith('92')) {
+      // If the number starts with 92, replace it with +92
+      formattedPhone = '+92' + formattedPhone.slice(2);
     }
-  };
+
+    // Create the WhatsApp URL
+    const whatsappUrl = `https://wa.me/${formattedPhone}?text=Hi, I'm interested in your ad: ${ad.ad_title}`;
+
+    // Open the WhatsApp URL in a new tab
+    window.open(whatsappUrl, '_blank');
+  } else {
+    alert('Contact number not available');
+  }
+};
 
   if (loading) {
     return (
