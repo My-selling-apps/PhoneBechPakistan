@@ -10,12 +10,10 @@ const VideoCardComponent = () => {
     "https://gijarsxlfavlufecgjiw.supabase.co/storage/v1/object/public/ads-images/snap2.mp4",
     "https://gijarsxlfavlufecgjiw.supabase.co/storage/v1/object/public/ads-images/snap3.mp4",
     "https://gijarsxlfavlufecgjiw.supabase.co/storage/v1/object/public/ads-images/snap3.mp4",
-
   ];
 
   const handleVideoClick = (video) => {
     setActiveVideo(video);
-    // We'll handle unmuting in the useEffect when the modal video loads
   };
 
   const closeVideo = () => {
@@ -41,7 +39,7 @@ const VideoCardComponent = () => {
               loop
               muted
               playsInline
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
         ))}
@@ -52,7 +50,7 @@ const VideoCardComponent = () => {
         {videos.map((video, index) => (
           <div
             key={index}
-            className="flex-shrink-0 m-2 sm:w-[6rem] md:w-64 h-[170px] md:h-[300px] overflow-hidden rounded-lg shadow-md relative cursor-pointer"
+            className="flex-shrink-0 m-2 w-[117px] h-[200px] overflow-hidden rounded-lg shadow-md relative cursor-pointer"
             onClick={() => handleVideoClick(video)}
           >
             <video
@@ -61,7 +59,7 @@ const VideoCardComponent = () => {
               loop
               muted
               playsInline
-              className="w-full h-full object-cover"
+              className="w-full h-full object-fill"
             />
           </div>
         ))}
@@ -86,7 +84,7 @@ const VideoCardComponent = () => {
               autoPlay
               controls
               muted={false}
-              className="max-w-full max-h-[600px]"
+              className="max-w-full max-h-[80vh]"
               onLoadedData={() => {
                 if (modalVideoRef.current) {
                   modalVideoRef.current.muted = false;
