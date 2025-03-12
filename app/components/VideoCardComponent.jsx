@@ -26,7 +26,7 @@ const VideoCardComponent = () => {
   };
 
   return (
-    <div className="relative min-h-[225px] top-[60px] md:top-[80px] bg-white">
+    <div className="relative min-h-[225px] top-[39px] md:top-[80px] bg-white">
       {/* Desktop Grid View */}
       <div className="hidden md:flex flex-wrap justify-center bg-white">
         {videos.map((video, index) => (
@@ -52,7 +52,7 @@ const VideoCardComponent = () => {
         {videos.map((video, index) => (
           <div
             key={index}
-            className="flex-shrink-0 m-2 sm:w-[6rem] md:w-64 h-[208px] md:h-[300px] overflow-hidden rounded-lg shadow-md relative cursor-pointer"
+            className="flex-shrink-0 m-2 sm:w-[6rem] md:w-64 h-[170px] md:h-[300px] overflow-hidden rounded-lg shadow-md relative cursor-pointer"
             onClick={() => handleVideoClick(video)}
           >
             <video

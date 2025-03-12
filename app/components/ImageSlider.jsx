@@ -26,7 +26,7 @@ export default function ImageSlider({buttonTxt}) {
 
   return (
     <>
-      <div className="relative w-full h-[135px] md:h-[500px] top-10 overflow-hidden">
+      <div className="relative w-full h-[135px] md:h-[500px] top-5 md:top-7 overflow-hidden">
         <div
           className="flex transition-transform duration-700 ease-in-out"
           style={{

@@ -67,7 +67,10 @@ const Navbar = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
         setIsMenuOpen(false);
       }
     };
@@ -77,11 +80,6 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-
-
-
-
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -110,12 +108,20 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-center justify-between px-1 md:px-8 py-4 bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white fixed top-0 w-full z-50">
+    // md:px-8
+    <nav className="flex items-center justify-between px-1  py-4 bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white fixed top-0 w-full z-50">
       {/* Left: Brand Name */}
-      <div className="flex-shrink-0">
-        <h1 className="text-xl font-bold ">
-          <Link href="/">PHONE BECH</Link>
-        </h1>
+      <div className="flex-shrink-0 flex items-center">
+        <Link href="/" className="flex items-center">
+          {/* Logo */}
+          <img
+            src="/phonebechpk.png" // Yahan apne logo ka path daalen
+            alt="Brand Logo"
+            className="h-14 w-14 mr-2" // Logo ka size aur margin adjust karein
+          />
+          {/* Brand Name */}
+          <h1 className="text-xl font-bold">PHONE BECH</h1>
+        </Link>
       </div>
 
       {/* Center/Right: Search Box */}
@@ -259,7 +265,10 @@ const Navbar = () => {
 
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg py-4 z-50 md:hidden" ref={mobileMenuRef}>
+        <div
+          className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg py-4 z-50 md:hidden"
+          ref={mobileMenuRef}
+        >
           {/* Protected Mobile Links */}
           {user && (
             <>
