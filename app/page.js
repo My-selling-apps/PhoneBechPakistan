@@ -64,7 +64,7 @@ export default function Home() {
           </div>
 
           {/* Boost Ad Section */}
-          <div className="mt-20">
+          <div className="">
             <div className="bg-gradient-to-r from-blue-700 to-[#B06AB3] font-sans px-6 py-12">
               <div className="container mx-auto flex flex-col justify-center items-center text-center">
                 <h2 className="text-white sm:text-4xl text-3xl font-bold mb-4">

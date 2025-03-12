@@ -132,8 +132,8 @@ const Navbar = () => {
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-10 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#53CFFF] transition-all duration-300 rounded-full"
-            // style={{ borderRadius: "0px 40px 0px 40px" }}
+            className="w-full px-10 py-2 text-gray-700  focus:outline-none focus:ring-2 focus:ring-[#53CFFF] transition-all duration-300 rounded-full"
+            style={{ borderRadius: "0px 40px 0px 40px" }}
           />
           <button
             type="submit"
