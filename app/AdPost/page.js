@@ -151,13 +151,13 @@ export default function AdPost() {
       const validImages = processedImages.filter(
         (img) =>
           img.prediction.predictedLabel === "Smartphone" &&
-          parseFloat(img.prediction.confidence) > 80
+          parseFloat(img.prediction.confidence) > 50
       );
 
       const invalidImages = processedImages.filter(
         (img) =>
           img.prediction.predictedLabel !== "Smartphone" ||
-          parseFloat(img.prediction.confidence) <= 80
+          parseFloat(img.prediction.confidence) <= 50
       );
 
       if (validImages.length > 0) {
