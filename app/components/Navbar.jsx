@@ -109,7 +109,7 @@ const Navbar = () => {
 
   return (
     // md:px-8
-    <nav className="flex items-center justify-between px-1  py-4 bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white fixed top-0 w-full z-50">
+    <nav className="flex items-center justify-between px-1  py-1 bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white fixed top-0 w-full z-50">
       {/* Left: Brand Name */}
       <div className="flex-shrink-0 flex items-center">
         <Link href="/" className="flex items-center">
@@ -117,10 +117,10 @@ const Navbar = () => {
           <img
             src="/phonebechpk.png" // Yahan apne logo ka path daalen
             alt="Brand Logo"
-            className="h-14 w-14 mr-2" // Logo ka size aur margin adjust karein
+            className="h-16 w-16 mr-2" // Logo ka size aur margin adjust karein
           />
           {/* Brand Name */}
-          <h1 className="text-xl font-bold">PHONE BECH</h1>
+          {/* <h1 className="text-xl font-bold">PHONE BECH</h1> */}
         </Link>
       </div>
 
