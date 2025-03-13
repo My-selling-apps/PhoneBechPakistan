@@ -6,7 +6,7 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
-import { FaPhone } from "react-icons/fa";
+import { FaMobileAlt } from "react-icons/fa";
 import {
   FaSignInAlt,
   FaUserPlus,
@@ -160,7 +160,7 @@ const Navbar = () => {
         {user && (
           <>
             <button className=" flex items-center gap-2 text-white hover:text-gray-200 transition-colors px-4 py-2">
-              <FaPhone /> <Link href="/Ads">Phones</Link>
+              <FaMobileAlt /> <Link href="/Ads">Phones</Link>
             </button>
             <button
               onClick={() => handleProtectedNavigation("/AdPost")}
@@ -295,7 +295,7 @@ const Navbar = () => {
               </div>
 
               <button className=" w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
-                <FaPhone /> <Link href="/Ads">Phones</Link>
+                <FaMobileAlt /> <Link href="/Ads">Phones</Link>
               </button>
 
               <button

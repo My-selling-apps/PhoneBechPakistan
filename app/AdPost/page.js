@@ -150,13 +150,13 @@ export default function AdPost() {
 
       const validImages = processedImages.filter(
         (img) =>
-          img.prediction.predictedLabel === "Smartphone" &&
+          (img.prediction.predictedLabel === "Smartphone" || img.prediction.predictedLabel === "Laptop") &&
           parseFloat(img.prediction.confidence) > 50
       );
-
+      
       const invalidImages = processedImages.filter(
         (img) =>
-          img.prediction.predictedLabel !== "Smartphone" ||
+          (img.prediction.predictedLabel !== "Smartphone" && img.prediction.predictedLabel !== "Laptop") ||
           parseFloat(img.prediction.confidence) <= 50
       );
 
@@ -200,6 +200,7 @@ export default function AdPost() {
             price,
             name,
             phone,
+            area,
             images: invalidImages.map((img) => img.url),
             condition,
             rejection_reason: invalidImages
