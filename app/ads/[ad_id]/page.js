@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Loader from "@/app/components/Loader";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const AdDetailPage = ({ params }) => {
   const [ad, setAd] = useState(null);
@@ -94,7 +97,7 @@ const AdDetailPage = ({ params }) => {
 
       setAd({ ...ad, images: updatedImages });
       setEditedAd({ ...editedAd, images: updatedImages });
-      alert("Image removed successfully!");
+      toast("Image removed successfully!");
     } catch (error) {
       console.error("Error removing image:", error.message);
     }
@@ -147,7 +150,7 @@ const AdDetailPage = ({ params }) => {
       setAd({ ...editedAd, images: updatedImages });
       setEditMode(false);
       setNewImages([]);
-      alert("Ad updated successfully!");
+      toast("Ad updated successfully!");
     } catch (error) {
       console.error("Error updating ad:", error.message);
     }
@@ -337,6 +340,7 @@ const AdDetailPage = ({ params }) => {
         </div>
         <Footer />
       </div>
+          <ToastContainer />
     </>
   );
 };
