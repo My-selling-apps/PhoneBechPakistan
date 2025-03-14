@@ -649,115 +649,100 @@ const AdsPage = () => {
                 >
                   {visibleAds.length > 0 ? (
                     visibleAds.map((ad) => (
+
+                      
                       <div
-                        key={ad.ad_id}
-                        className={`bg-white border overflow-hidden rounded-lg cursor-pointer hover:border-blue-600 transition-all relative
-                ${
-                  isListView
-                    ? "flex flex-col sm:flex-row shadow-sm hover:shadow-md"
-                    : ""
-                }`}
-                        onClick={() => handleAdClick(ad.ad_id)}
-                      >
-              <div className={`bg-gray-50 overflow-hidden flex items-center justify-center
-  ${isListView 
-    ? 'w-full sm:w-60 h-48 sm:h-60 flex-shrink-0' 
-    : 'mx-auto rounded-b-2xl md:aspect-[281/218] aspect-[240/313]'}`}>
-  <img
-    src={ad.images[0] || "https://via.placeholder.com/281x218"}
-    alt={ad.ad_title}
-    className={`${isListView 
-      ? 'w-full h-full object-cover' 
-      : 'w-full h-full object-cover'}`}
-  />
-</div>
-
-                        <div
-                          className={`${
-                            isListView
-                              ? "flex-grow flex flex-col justify-between p-4 sm:p-6"
-                              : "p-4"
-                          }`}
-                        >
-                          <div>
-                            <div
-                              className={`${isListView ? "flex justify-between items-start mb-2" : ""}`}
-                            >
-                              <h3
-                                className={`font-bold text-gray-800 ${isListView ? "text-lg mb-2" : "text-sm sm:text-base"}`}
-                              >
-                                {ad.ad_title}
-                              </h3>
-                              {isListView && (
-                                <h4 className="text-lg font-bold text-blue-600">
-                                  PKR {ad.price.toLocaleString()}
-                                </h4>
-                              )}
-                            </div>
-
-                            <p
-                              className={`text-gray-600 ${isListView ? "mb-2 line-clamp-2" : "truncate"}`}
-                            >
-                              {ad.description}
-                            </p>
-
-                            <div
-                              className={`${isListView ? "flex items-center gap-4 text-sm text-gray-500" : ""}`}
-                            >
-                              <p
-                                className={`text-gray-600 ${isListView ? "flex items-center gap-1" : "truncate"}`}
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className={`${isListView ? "h-4 w-4" : "hidden"}`}
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                                  />
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                                  />
-                                </svg>
-                                {ad.location}
-                              </p>
-                            </div>
+                      key={ad.ad_id || index} // Ensure unique key
+                      className={`bg-white border overflow-hidden rounded-lg cursor-pointer hover:border-blue-600 transition-all relative 
+                        ${
+                          isListView
+                            ? "flex flex-row shadow-sm hover:shadow-md" // Always use flex-row for list view
+                            : ""
+                        }`}
+                      onClick={() => handleAdClick(ad.ad_id)}
+                    >
+                      {/* Image Section */}
+                      <div className={`bg-gray-50 overflow-hidden flex items-center justify-center
+                        ${isListView 
+                          ? 'w-40 h-[229px] sm:w-60 sm:h-60 flex-shrink-0' // Smaller image on small devices
+                          : 'mx-auto rounded-b-2xl md:aspect-[281/218] aspect-[240/313]'}`}>
+                        <img
+                          src={ad.images[0] || "https://via.placeholder.com/281x218"}
+                          alt={ad.ad_title}
+                          className={`${isListView 
+                            ? 'w-full h-full object-cover' 
+                            : 'w-full h-full object-cover'}`}
+                        />
+                      </div>
+                    
+                      {/* Details Section */}
+                      <div className={`${
+                        isListView
+                          ? "flex-grow flex flex-col justify-between p-[7px] sm:p-6" // Adjusted padding for small devices
+                          : "p-4"
+                      }`}>
+                        <div>
+                          <div className={`${isListView ? "flex justify-between items-start mb-2" : ""}`}>
+                            <h3 className={`font-bold text-gray-800 ${isListView ? "text-base sm:text-lg mb-2" : "text-sm sm:text-base"}`}>
+                              {ad.ad_title}
+                            </h3>
+                            {/* Price removed from top right */}
                           </div>
-
-                          <div
-                            className={`flex items-center ${isListView ? "justify-between mt-4 pt-4 border-t" : "justify-between gap-2 mt-4"}`}
-                          >
-                            <button
-                              onClick={(event) =>
-                                handleFavouriteClick(event, ad.ad_id)
-                              }
-                              className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all
-                      ${
-                        favoriteAds.has(ad.ad_id)
-                          ? "bg-red-800 text-white"
-                          : "bg-gray-100 text-gray-500"
-                      }
-                      hover:bg-gray-200`}
-                            >
-                              <FaHeart />
-                            </button>
-
-                            {!isListView && (
-                              <h4 className="text-sm sm:text-base text-gray-800 font-bold">
-                                PKR {ad.price.toLocaleString()}
-                              </h4>
-                            )}
+                    
+                          <p className={`text-gray-600 ${isListView ? "mb-2 line-clamp-2 text-sm sm:text-base" : "truncate"}`}>
+                            {ad.description}
+                          </p>
+                    
+                          <div className={`${isListView ? "flex items-center gap-4 text-sm text-gray-500" : ""}`}>
+                            <p className={`text-gray-600 ${isListView ? "flex items-center gap-1 text-sm sm:text-base" : "truncate"}`}>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className={`${isListView ? "h-4 w-4" : "hidden"}`}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                />
+                              </svg>
+                              {ad.location}
+                            </p>
                           </div>
                         </div>
+                    
+                        {/* Price Section */}
+                        <div className={`flex items-center ${isListView ? "justify-between mt-4 pt-4 border-t" : "justify-between gap-2 mt-4"}`}>
+                          {/* Price */}
+                          <h4 className="text-sm sm:text-base text-gray-800 font-bold">
+                            PKR {ad.price.toLocaleString()}
+                          </h4>
+                    
+                          {/* Heart Icon */}
+                          <button
+                            onClick={(event) => handleFavouriteClick(event, ad.ad_id)}
+                            className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all
+                              ${
+                                favoriteAds.has(ad.ad_id)
+                                  ? "bg-red-800 text-white"
+                                  : "bg-gray-100 text-gray-500"
+                              }
+                              hover:bg-gray-200`}
+                          >
+                            <FaHeart />
+                          </button>
+                        </div>
                       </div>
+                    </div>
                     ))
                   ) : (
                     <p className="text-center text-gray-600 col-span-full">

@@ -69,8 +69,8 @@ const MyAdsPage = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col min-h-screen font-sans bg-gray-50 mt-28 overflow-x-hidden">
-        <div className="p-4 mx-auto w-full max-w-[800px]">
+      <div className="flex flex-col min-h-screen font-sans bg-gray-50">
+        <div className="flex-grow p-4 mx-auto w-full max-w-[800px] mt-28">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-8 text-center">
             Manage and view your Ads
           </h2>
@@ -114,7 +114,6 @@ const MyAdsPage = () => {
                               handleAdClick(ad.ad_id);
                             }}
                             className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white rounded-lg hover:bg-purple-700 transition-colors duration-200"
-                            // style={{ borderRadius: "0px 40px 0px 40px" }}
                           >
                             View
                           </button>
@@ -124,7 +123,6 @@ const MyAdsPage = () => {
                               handleDeleteAd(ad.ad_id);
                             }}
                             className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
-                            // style={{ borderRadius: "0px 40px 0px 40px" }}
                           >
                             Delete
                           </button>
@@ -141,6 +139,7 @@ const MyAdsPage = () => {
             </div>
           )}
         </div>
+        {/* Footer */}
         <Footer />
       </div>
       <ToastContainer />
