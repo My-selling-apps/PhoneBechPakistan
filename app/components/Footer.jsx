@@ -28,7 +28,7 @@ export default function Footer() {
 
               {/* Facebook Icon */}
               <a
-                href="https://www.facebook.com/your-facebook-link" // Replace with your Facebook link
+                // href="https://www.facebook.com/your-facebook-link" // Replace with your Facebook link
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-lightBlue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all"
