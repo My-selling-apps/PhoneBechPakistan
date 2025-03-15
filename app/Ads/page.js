@@ -664,7 +664,7 @@ const AdsPage = () => {
                       {/* Image Section */}
                       <div className={`bg-gray-50 overflow-hidden flex items-center justify-center
                         ${isListView 
-                          ? 'w-40 h-[229px] sm:w-60 sm:h-60 flex-shrink-0' // Smaller image on small devices
+                          ? 'w-40 h-[180px] sm:w-60 sm:h-60 flex-shrink-0' // Smaller image on small devices
                           : 'mx-auto rounded-b-2xl md:aspect-[281/218] aspect-[240/313]'}`}>
                         <img
                           src={ad.images[0] || "https://via.placeholder.com/281x218"}
