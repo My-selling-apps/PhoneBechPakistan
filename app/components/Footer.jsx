@@ -17,24 +17,44 @@ export default function Footer() {
             </h5>
             <div className="mt-6 lg:mb-0 mb-6 flex">
               {/* Instagram Icon */}
-              <button className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-lightBlue-400 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all">
+              <a
+                href="https://www.instagram.com/phonebechpk/profilecard/?igsh=MXRpZ2k1MDdpZzhobg=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-lightBlue-400 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all"
+              >
                 <FaInstagram className="text-lg" />
-              </button>
+              </a>
 
               {/* Facebook Icon */}
-              <button className="bg-white  bg-gradient-to-r from-blue-700 to-[#B06AB3] text-lightBlue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all">
+              <a
+                href="https://www.facebook.com/your-facebook-link" // Replace with your Facebook link
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-lightBlue-600 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all"
+              >
                 <FaFacebookF className="text-lg" />
-              </button>
+              </a>
 
               {/* YouTube Icon */}
-              <button className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all">
+              <a
+                href="https://youtube.com/@phonebechpk?si=KwsOC9tLZPiMzv56"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-white shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all"
+              >
                 <FaYoutube className="text-lg" />
-              </button>
+              </a>
 
               {/* TikTok Icon */}
-              <button className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-blueGray-800 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all">
+              <a
+                href="https://www.tiktok.com/@phonebechpk?_t=ZN-8uh6SHJ8jhe&_r=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white bg-gradient-to-r from-blue-700 to-[#B06AB3] text-blueGray-800 shadow-lg font-normal h-10 w-10 flex items-center justify-center rounded-full outline-none focus:outline-none mr-2 hover:bg-gray-100 transition-all"
+              >
                 <FaTiktok className="text-lg" />
-              </button>
+              </a>
             </div>
           </div>
           <div className="w-full lg:w-6/12 px-4">
@@ -47,7 +67,7 @@ export default function Footer() {
                   <li>
                     <a
                       className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                      href="#"
+                      href="/AboutUs"
                     >
                       About Us
                     </a>
@@ -78,7 +98,7 @@ export default function Footer() {
                   <li>
                     <a
                       className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                      href="#"
+                      href="/Terms&Conditions"
                     >
                       Terms &amp; Conditions
                     </a>
@@ -86,7 +106,7 @@ export default function Footer() {
                   <li>
                     <a
                       className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                      href="#"
+                      href="/PrivacyPolicy"
                     >
                       Privacy Policy
                     </a>

@@ -4,24 +4,22 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import BrandLogoSlider from "./components/BrandLogoSlider";
 import ImageSlider from "./components/ImageSlider";
-import { useState, useEffect } from "react";
 import VideoCardComponent from "./components/VideoCardComponent";
 import AdsComponent from "./components/AdsComponent";
 import Footer from "./components/Footer";
 import Link from "next/link";
-import StickyButton from "./components/StickyButton"; // Import the StickyButton component
-import { supabase } from "./supabase"; // Import your Supabase client
-import { useRouter } from "next/navigation"
+import StickyButton from "./components/StickyButton";
+import { supabase } from "./supabase";
+import { useRouter } from "next/navigation";
+import TermsPopup from "./components/TermsPopup"; // Import the reusable popup component
+import { useState,useEffect } from "react";
+
 
 export default function Home() {
-
   const [user, setUser] = useState(null); // State to track user login status
   const router = useRouter();
 
   useEffect(() => {
-    // Ensuring the global styles are applied once the app is loaded
-    document.documentElement.style.scrollBehavior = "smooth"; // Optional: for smooth scrolling
-
     // Fetch user session to check login status
     const fetchUser = async () => {
       try {
@@ -34,7 +32,6 @@ export default function Home() {
         }
       } catch (error) {
         console.error("Error fetching session:", error);
-        // Handle the error appropriately, e.g., redirect to login page
         router.push("/login");
       }
     };
@@ -45,7 +42,7 @@ export default function Home() {
   const handleStickyButtonClick = () => {
     if (!user) {
       router.push("/register");
-    } 
+    }
   };
 
   return (
@@ -110,17 +107,13 @@ export default function Home() {
       </div>
 
       {/* Conditionally Render StickyButton */}
-      {!user && <StickyButton  onClick={handleStickyButtonClick} />}
+      {!user && <StickyButton onClick={handleStickyButtonClick} />}
+
+      {/* Terms and Conditions Popup */}
+      <TermsPopup user={user} />
     </div>
   );
 }
-
-
-
-
-
-
-
 
 // "use client";
 

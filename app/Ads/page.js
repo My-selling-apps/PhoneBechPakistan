@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import Loader from "../components/Loader";
 import { useSearchParams } from "next/navigation";
 import StickyButton from "../components/StickyButton";
+import TermsPopup from "../components/TermsPopup";
 
 // Define sectors for each location
 const locationSectors = {
@@ -768,6 +769,7 @@ const AdsPage = () => {
         </div>
 
         <Footer />
+        <TermsPopup user={user} /> {/* Add the popup component */}
       </div>
     </>
   );
