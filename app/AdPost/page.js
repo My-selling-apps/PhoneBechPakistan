@@ -9,7 +9,7 @@ import Footer from "../components/Footer";
 import Loader from "../components/Loader";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import SuccessModal from "../components/SuccessModal";
 const locationSectors = {
   "Islamabad Capital Territory, Pakistan": [
     "Sector F-5",
@@ -43,6 +43,7 @@ export default function AdPost() {
   const [sold, setSold] = useState(null);
   const [loading, setLoading] = useState(false);
   const [condition, setCondition] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
 
@@ -122,7 +123,9 @@ export default function AdPost() {
           area,
         });
         if (insertError) throw insertError;
+        resetForm();
         toast("Ad posted successfully!");
+        setIsModalOpen(true);
       }
 
       if (invalidImages.length > 0) {
@@ -446,6 +449,7 @@ export default function AdPost() {
         <Footer />
       </div>
       <ToastContainer />
+      <SuccessModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> 
     </>
   );
 }
